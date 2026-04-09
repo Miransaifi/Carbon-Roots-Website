@@ -357,20 +357,10 @@ const initExampleOutputCharts = async () => {
       {
         id: 'Payback Period',
         keys: ['payback_year', 'payback_period', 'payback_years'],
-        format: (v, rowMap) => {
+        format: (v) => {
           const n = parseNumber(v);
           if (n === null) return String(v).trim();
-
-          const achieved = parseNumber(rowMap.get('payback_achieved_flag'));
-          if (achieved === 0) return 'Not achieved in model horizon';
-
-          const startYear = parseNumber(rowMap.get('start_year'));
-          if (startYear !== null && n >= startYear) {
-            const yearsFromStart = Math.max(0, n - startYear);
-            return `Year ${yearsFromStart} (${Math.round(n)})`;
-          }
-
-          return `${new Intl.NumberFormat('en-GB', { maximumFractionDigits: 1 }).format(n)} years`;
+          return `${Math.round(n)}`;
         },
       },
     ];
