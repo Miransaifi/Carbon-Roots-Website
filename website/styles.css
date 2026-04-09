@@ -96,21 +96,6 @@ a {
   display: block;
 }
 
-.brand-text-wrap {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.brand-text {
-  font-weight: 700;
-}
-
-.brand-tagline {
-  color: var(--muted);
-  font-size: 0.78rem;
-}
-
 .main-nav {
   display: flex;
   gap: 1.1rem;
