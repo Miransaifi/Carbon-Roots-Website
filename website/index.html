@@ -396,7 +396,7 @@
             <div class="form-step" data-step="5" hidden>
               <label>
                 Land type
-                <select name="land_type" required>
+                <select name="land_type" id="land-type" required>
                   <option value="" selected disabled>Select one</option>
                   <option>Degraded grassland</option>
                   <option>Degraded cropland</option>
@@ -409,6 +409,10 @@
                   <option>Community / smallholder mixed-use land</option>
                   <option>Other (specify)</option>
                 </select>
+              </label>
+              <label id="land-type-other-wrap" hidden>
+                Please specify land type
+                <input type="text" name="land_type_other" id="land-type-other" placeholder="Describe land type" />
               </label>
             </div>
 

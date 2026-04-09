@@ -428,7 +428,20 @@ if (intakeForm) {
   const nextBtn = intakeForm.querySelector('#wizard-next');
   const submitBtn = intakeForm.querySelector('#wizard-submit');
   const progress = intakeForm.querySelector('#wizard-progress');
+  const landTypeSelect = intakeForm.querySelector('#land-type');
+  const landTypeOtherWrap = intakeForm.querySelector('#land-type-other-wrap');
+  const landTypeOther = intakeForm.querySelector('#land-type-other');
   let currentStep = 0;
+
+  const updateLandTypeOther = () => {
+    if (!landTypeSelect || !landTypeOtherWrap || !landTypeOther) return;
+    const isOther = landTypeSelect.value === 'Other (specify)';
+    landTypeOtherWrap.hidden = !isOther;
+    landTypeOther.required = isOther;
+    if (!isOther) {
+      landTypeOther.value = '';
+    }
+  };
 
   const updateStep = () => {
     steps.forEach((step, i) => {
@@ -475,11 +488,16 @@ if (intakeForm) {
     });
   }
 
+  if (landTypeSelect) {
+    landTypeSelect.addEventListener('change', updateLandTypeOther);
+  }
+
   intakeForm.addEventListener('submit', (event) => {
     if (!validateCurrentStep()) {
       event.preventDefault();
     }
   });
 
+  updateLandTypeOther();
   updateStep();
 }
