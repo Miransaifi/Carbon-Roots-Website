@@ -162,6 +162,10 @@ a { color: inherit; text-decoration: none; }
 .section { padding: 5.2rem 0; }
 .section-soft { background: var(--bg-soft); }
 
+section[id] {
+  scroll-margin-top: 210px;
+}
+
 .section-grid {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
@@ -488,10 +492,6 @@ a { color: inherit; text-decoration: none; }
 }
 
 #intake-form {
-  scroll-margin-top: 210px;
-}
-
-#intake {
   scroll-margin-top: 210px;
 }
 
