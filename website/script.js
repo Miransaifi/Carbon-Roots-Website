@@ -275,11 +275,46 @@ const initExampleOutputCharts = async () => {
     }
 
     const kpis = [
-      { id: 'NPV', keys: ['npv', 'project_npv'] },
-      { id: 'IRR', keys: ['irr', 'project_irr'] },
-      { id: 'Total Credits', keys: ['total_credits', 'credits_total'] },
-      { id: 'Break-even Price', keys: ['break_even_price', 'breakeven_price'] },
-      { id: 'Payback Period', keys: ['payback_period', 'payback_years'] },
+      {
+        id: 'NPV',
+        keys: ['npv_base', 'npv', 'project_npv'],
+        format: (v) => {
+          const n = parseNumber(v);
+          return n === null ? String(v).trim() : new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+        },
+      },
+      {
+        id: 'IRR',
+        keys: ['irr_base', 'irr', 'project_irr'],
+        format: (v) => {
+          const n = parseNumber(v);
+          return n === null ? String(v).trim() : `${(n * 100).toFixed(1)}%`;
+        },
+      },
+      {
+        id: 'Total Credits',
+        keys: ['total_credits_base', 'total_credits', 'credits_total'],
+        format: (v) => {
+          const n = parseNumber(v);
+          return n === null ? String(v).trim() : new Intl.NumberFormat('en-GB', { maximumFractionDigits: 0 }).format(n);
+        },
+      },
+      {
+        id: 'Break-even Price',
+        keys: ['break_even_price', 'breakeven_price'],
+        format: (v) => {
+          const n = parseNumber(v);
+          return n === null ? String(v).trim() : `${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n)}/tCO2e`;
+        },
+      },
+      {
+        id: 'Payback Period',
+        keys: ['payback_year', 'payback_period', 'payback_years'],
+        format: (v) => {
+          const n = parseNumber(v);
+          return n === null ? String(v).trim() : `${new Intl.NumberFormat('en-GB', { maximumFractionDigits: 1 }).format(n)} years`;
+        },
+      },
     ];
 
     const cards = document.querySelectorAll('#example-kpis .kpi-card');
@@ -292,7 +327,7 @@ const initExampleOutputCharts = async () => {
 
       const rawValue = cfg.keys.map((k) => map.get(k)).find((v) => v !== undefined && String(v).trim() !== '');
       if (!rawValue) return;
-      body.textContent = String(rawValue).trim();
+      body.textContent = cfg.format ? cfg.format(rawValue) : String(rawValue).trim();
     });
   } catch (error) {
     showEmpty();
