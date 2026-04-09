@@ -142,6 +142,15 @@ const formatAxisNumber = (value) => {
   }).format(value);
 };
 
+const formatCompactNumber = (value) => {
+  const n = parseNumber(value);
+  if (n === null) return String(value).trim();
+  return new Intl.NumberFormat('en-GB', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(n);
+};
+
 const buildLineChart = (canvasId, title, labels, series) => {
   const canvas = document.querySelector(`#${canvasId}`);
   if (!canvas || !window.Chart) return;
@@ -199,10 +208,11 @@ const buildLineChart = (canvasId, title, labels, series) => {
           ticks: { color: '#4d5951' },
         },
         y: {
-          grid: { color: 'rgba(16, 28, 21, 0.08)', drawBorder: false },
+          grid: { color: 'rgba(16, 28, 21, 0.06)', drawBorder: false },
           border: { display: false },
           ticks: {
             color: '#4d5951',
+            maxTicksLimit: 5,
             callback: (value) => formatAxisNumber(value),
           },
         },
@@ -226,6 +236,22 @@ const initExampleOutputCharts = async () => {
   const hideEmpty = () => {
     if (revenueEmpty) revenueEmpty.hidden = true;
     if (creditsEmpty) creditsEmpty.hidden = true;
+  };
+
+  const exampleProjectTitle = document.querySelector('#example-project-title');
+  const exampleProjectContext = document.querySelector('#example-project-context');
+  const insightStrip = document.querySelector('#example-insights');
+  const insightList = document.querySelector('#insight-list');
+
+  const setInsights = (items) => {
+    if (!insightStrip || !insightList || !items?.length) return;
+    insightList.innerHTML = '';
+    items.forEach((text) => {
+      const li = document.createElement('li');
+      li.textContent = text;
+      insightList.appendChild(li);
+    });
+    insightStrip.hidden = false;
   };
 
   try {
@@ -274,13 +300,29 @@ const initExampleOutputCharts = async () => {
       }
     }
 
+    const projectName = map.get('project_name');
+    const country = map.get('country');
+    const scenario = map.get('scenario_selected');
+    if (exampleProjectTitle && projectName && String(projectName).trim()) {
+      exampleProjectTitle.textContent = `Concept project: ${String(projectName).trim()}`;
+    }
+    if (exampleProjectContext) {
+      const contextParts = [
+        country && String(country).trim(),
+        scenario && String(scenario).trim() ? `${String(scenario).trim()} scenario` : null,
+      ].filter(Boolean);
+      if (contextParts.length) {
+        exampleProjectContext.textContent = `Illustrative pre-feasibility output, ${contextParts.join(' • ')}.`;
+      }
+    }
+
     const kpis = [
       {
         id: 'NPV',
         keys: ['npv_base', 'npv', 'project_npv'],
         format: (v) => {
           const n = parseNumber(v);
-          return n === null ? String(v).trim() : new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+          return n === null ? String(v).trim() : new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(n);
         },
       },
       {
@@ -295,8 +337,7 @@ const initExampleOutputCharts = async () => {
         id: 'Total Credits',
         keys: ['total_credits_base', 'total_credits', 'credits_total'],
         format: (v) => {
-          const n = parseNumber(v);
-          return n === null ? String(v).trim() : new Intl.NumberFormat('en-GB', { maximumFractionDigits: 0 }).format(n);
+          return formatCompactNumber(v);
         },
       },
       {
@@ -320,7 +361,7 @@ const initExampleOutputCharts = async () => {
     const cards = document.querySelectorAll('#example-kpis .kpi-card');
     cards.forEach((card) => {
       const title = card.querySelector('h3')?.textContent?.trim();
-      const body = card.querySelector('p');
+      const body = card.querySelector('.kpi-value');
       if (!title || !body) return;
       const cfg = kpis.find((k) => k.id === title);
       if (!cfg) return;
@@ -329,6 +370,19 @@ const initExampleOutputCharts = async () => {
       if (!rawValue) return;
       body.textContent = cfg.format ? cfg.format(rawValue) : String(rawValue).trim();
     });
+
+    const finalRow = rows[rows.length - 1];
+    const finalRevenue = parseNumber(finalRow?.revenue_base);
+    const finalCredits = parseNumber(finalRow?.credits_base);
+    const finalRevenueP90 = parseNumber(finalRow?.revenue_p90);
+    const finalCreditsP90 = parseNumber(finalRow?.credits_p90);
+    if (rows.length && finalRevenue !== null && finalCredits !== null && finalRevenueP90 !== null && finalCreditsP90 !== null) {
+      setInsights([
+        `Base-case revenue trajectory reaches ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(finalRevenue)} by ${finalRow.year}.`,
+        `Base-case credit issuance reaches ${formatCompactNumber(finalCredits)} credits by ${finalRow.year}.`,
+        `P90 trajectory remains more conservative at ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(finalRevenueP90)} revenue and ${formatCompactNumber(finalCreditsP90)} credits.`,
+      ]);
+    }
   } catch (error) {
     showEmpty();
   }

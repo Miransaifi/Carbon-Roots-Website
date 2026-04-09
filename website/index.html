@@ -259,27 +259,36 @@
 
           <div class="example-output" aria-label="Example output" id="example-output">
             <p class="eyebrow">Example output</p>
+            <div class="example-head">
+              <h3 id="example-project-title">Concept project: ARR screening output</h3>
+              <p id="example-project-context">Illustrative pre-feasibility output from the Carbon Roots engine.</p>
+            </div>
 
             <div class="kpi-grid" id="example-kpis" aria-label="Example output KPI cards">
               <article class="kpi-card">
                 <h3>NPV</h3>
-                <p>Not available in current LOOKR_ISSUANCE data</p>
+                <p class="kpi-value">Not available</p>
+                <p class="kpi-meta">Base scenario</p>
               </article>
               <article class="kpi-card">
                 <h3>IRR</h3>
-                <p>Not available in current LOOKR_ISSUANCE data</p>
+                <p class="kpi-value">Not available</p>
+                <p class="kpi-meta">Base scenario</p>
               </article>
               <article class="kpi-card">
                 <h3>Total Credits</h3>
-                <p>Not available in current LOOKR_ISSUANCE data</p>
+                <p class="kpi-value">Not available</p>
+                <p class="kpi-meta">Base scenario</p>
               </article>
               <article class="kpi-card">
                 <h3>Break-even Price</h3>
-                <p>Not available in current LOOKR_ISSUANCE data</p>
+                <p class="kpi-value">Not available</p>
+                <p class="kpi-meta">Screening estimate</p>
               </article>
               <article class="kpi-card">
                 <h3>Payback Period</h3>
-                <p>Not available in current LOOKR_ISSUANCE data</p>
+                <p class="kpi-value">Not available</p>
+                <p class="kpi-meta">Screening estimate</p>
               </article>
             </div>
 
@@ -294,6 +303,11 @@
                 <canvas id="credits-chart" aria-label="Projected credit issuance chart" role="img"></canvas>
                 <p class="chart-empty" id="credits-empty" hidden>Awaiting LOOKR_ISSUANCE data.</p>
               </article>
+            </div>
+
+            <div class="insight-strip" id="example-insights" aria-label="Example output insights" hidden>
+              <p class="insight-title">What this indicates</p>
+              <ul id="insight-list"></ul>
             </div>
           </div>
         </div>
