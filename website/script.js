@@ -461,50 +461,52 @@ const initExampleOutputCharts = async () => {
       ]);
     };
 
+    const buildScenarioInsights = (scenario) => {
+      const finalRow = rows[rows.length - 1];
+      if (!finalRow) return;
+
+      const scenarioLabel = scenario === 'low' ? 'Low-price' : scenario === 'high' ? 'High-price' : 'Mid-price';
+      const finalRevenue = parseNumber(
+        scenario === 'low' ? finalRow.revenue_low : scenario === 'high' ? finalRow.revenue_high : finalRow.revenue_base,
+      );
+      const finalCredits = parseNumber(
+        scenario === 'low' ? finalRow.credits_p90 : scenario === 'high' ? finalRow.credits_p50 : finalRow.credits_base,
+      );
+      const npv = parseNumber(scenario === 'low' ? map.get('npv_p90') : scenario === 'high' ? map.get('npv_p50') : map.get('npv_base'));
+      const irr = parseNumber(scenario === 'low' ? map.get('irr_p90') : scenario === 'high' ? map.get('irr_p50') : map.get('irr_base'));
+      const breakEven = parseNumber(map.get('break_even_price'));
+
+      if (finalRevenue === null || finalCredits === null) return;
+
+      const insight1 = `${scenarioLabel} trajectory reaches ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(finalRevenue)} annual revenue and ${formatCompactNumber(finalCredits)} annual credits by ${finalRow.year}.`;
+
+      const creditDropP50 = parseNumber(map.get('credit_drop_p50'));
+      const creditDropP90 = parseNumber(map.get('credit_drop_p90'));
+      const insight2 = creditDropP50 !== null && creditDropP90 !== null
+        ? `Issuance downside remains material: ${formatPercent(creditDropP50)} at P50 and ${formatPercent(creditDropP90)} at P90 versus base.`
+        : 'Scenario keeps the same Base/P50/P90 issuance structure for downside visibility.';
+
+      const parts = [];
+      if (npv !== null) parts.push(`NPV ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(npv)}`);
+      if (irr !== null) parts.push(`IRR ${formatPercent(irr)}`);
+      if (breakEven !== null) parts.push(`break-even ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(breakEven)}/tCO2e`);
+      const insight3 = parts.length
+        ? `Commercial readout for this scenario: ${parts.join(', ')}.`
+        : 'Commercial readout updates with the selected scenario.';
+
+      setInsights([insight1, insight2, insight3]);
+    };
+
     const initialScenario = scenarioSelect?.value || 'mid';
     renderScenario(initialScenario);
+    buildScenarioInsights(initialScenario);
 
     if (scenarioSelect) {
       scenarioSelect.addEventListener('change', () => {
-        renderScenario(scenarioSelect.value || 'mid');
+        const selected = scenarioSelect.value || 'mid';
+        renderScenario(selected);
+        buildScenarioInsights(selected);
       });
-    }
-
-    const finalRow = rows[rows.length - 1];
-    const finalRevenue = parseNumber(finalRow?.revenue_base);
-    const finalCredits = parseNumber(finalRow?.credits_base);
-    const finalRevenueP90 = parseNumber(finalRow?.revenue_p90);
-    const finalCreditsP90 = parseNumber(finalRow?.credits_p90);
-    if (rows.length && finalRevenue !== null && finalCredits !== null && finalRevenueP90 !== null && finalCreditsP90 !== null) {
-      const totalRevenue = parseNumber(map.get('total_revenue'));
-      const totalCreditsBase = parseNumber(map.get('total_credits_base'));
-      const creditDropP50 = parseNumber(map.get('credit_drop_p50'));
-      const creditDropP90 = parseNumber(map.get('credit_drop_p90'));
-      const npvDetPct = parseNumber(map.get('npv_deterioration_pct'));
-      const irrBase = parseNumber(map.get('irr_base'));
-      const breakEven = parseNumber(map.get('break_even_price'));
-
-      const insight1 = totalRevenue !== null && totalCreditsBase !== null
-        ? `Base-case output indicates ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(totalRevenue)} potential revenue from ${formatCompactNumber(totalCreditsBase)} total credits across the model period.`
-        : `Base-case revenue trajectory reaches ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(finalRevenue)} by ${finalRow.year}.`;
-
-      const insight2 = creditDropP50 !== null && creditDropP90 !== null
-        ? `Risk-adjusted issuance falls by ${formatPercent(creditDropP50)} at P50 and ${formatPercent(creditDropP90)} at P90 versus base, so the downside spread is material.`
-        : `P90 trajectory remains more conservative at ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(finalRevenueP90)} revenue and ${formatCompactNumber(finalCreditsP90)} credits.`;
-
-      const insight3Parts = [];
-      if (irrBase !== null) insight3Parts.push(`base IRR is ${formatPercent(irrBase)}`);
-      if (breakEven !== null) insight3Parts.push(`break-even price is ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(breakEven)}/tCO2e`);
-      if (npvDetPct !== null) insight3Parts.push(`NPV deterioration under downside assumptions is ${formatPercent(npvDetPct)}`);
-      const insight3 = insight3Parts.length
-        ? `Commercial resilience check: ${insight3Parts.join(', ')}.`
-        : `Base-case credit issuance reaches ${formatCompactNumber(finalCredits)} credits by ${finalRow.year}.`;
-
-      setInsights([
-        insight1,
-        insight2,
-        insight3,
-      ]);
     }
   } catch (error) {
     showEmpty();
