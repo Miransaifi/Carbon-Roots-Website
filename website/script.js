@@ -165,43 +165,21 @@ const formatPercent = (value, digits = 1) => {
   return `${(n * 100).toFixed(digits)}%`;
 };
 
-const buildLineChart = (canvasId, title, labels, series) => {
+const chartInstances = {};
+
+const buildLineChart = (canvasId, title, labels, datasets) => {
   const canvas = document.querySelector(`#${canvasId}`);
   if (!canvas || !window.Chart) return;
 
-  new Chart(canvas, {
+  if (chartInstances[canvasId]) {
+    chartInstances[canvasId].destroy();
+  }
+
+  chartInstances[canvasId] = new Chart(canvas, {
     type: 'line',
     data: {
       labels,
-      datasets: [
-        {
-          label: 'Base',
-          data: series.base,
-          borderColor: '#1F3D2B',
-          backgroundColor: '#1F3D2B',
-          borderWidth: 3,
-          pointRadius: 0,
-          tension: 0.3,
-        },
-        {
-          label: 'P50',
-          data: series.p50,
-          borderColor: '#4F7C5A',
-          backgroundColor: '#4F7C5A',
-          borderWidth: 2,
-          pointRadius: 0,
-          tension: 0.3,
-        },
-        {
-          label: 'P90',
-          data: series.p90,
-          borderColor: '#A7BFA9',
-          backgroundColor: '#A7BFA9',
-          borderWidth: 2,
-          pointRadius: 0,
-          tension: 0.3,
-        },
-      ],
+      datasets,
     },
     options: {
       responsive: true,
@@ -256,6 +234,7 @@ const initExampleOutputCharts = async () => {
   const exampleProjectContext = document.querySelector('#example-project-context');
   const insightStrip = document.querySelector('#example-insights');
   const insightList = document.querySelector('#insight-list');
+  const scenarioSelect = document.querySelector('#scenario-select');
 
   const setInsights = (items) => {
     if (!insightStrip || !insightList || !items?.length) return;
@@ -285,18 +264,6 @@ const initExampleOutputCharts = async () => {
     hideEmpty();
 
     const labels = rows.map((r) => String(r.year));
-
-    buildLineChart('revenue-chart', 'Projected revenue', labels, {
-      base: rows.map((r) => r.revenue_base),
-      p50: rows.map((r) => r.revenue_p50),
-      p90: rows.map((r) => r.revenue_p90),
-    });
-
-    buildLineChart('credits-chart', 'Projected credit issuance', labels, {
-      base: rows.map((r) => r.credits_base),
-      p50: rows.map((r) => r.credits_p50),
-      p90: rows.map((r) => r.credits_p90),
-    });
 
     const map = new Map();
     const outputResponse = await fetch('assets/data/LOOKR_OUTPUT.csv', { cache: 'no-store' });
@@ -333,7 +300,11 @@ const initExampleOutputCharts = async () => {
     const kpis = [
       {
         id: 'NPV',
-        keys: ['npv_base', 'npv', 'project_npv'],
+        byScenario: {
+          low: ['npv_p90'],
+          mid: ['npv_base', 'npv', 'project_npv'],
+          high: ['npv_p50'],
+        },
         format: (v) => {
           const n = parseNumber(v);
           return n === null ? String(v).trim() : new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(n);
@@ -341,7 +312,11 @@ const initExampleOutputCharts = async () => {
       },
       {
         id: 'IRR',
-        keys: ['irr_base', 'irr', 'project_irr'],
+        byScenario: {
+          low: ['irr_p90'],
+          mid: ['irr_base', 'irr', 'project_irr'],
+          high: ['irr_p50'],
+        },
         format: (v) => {
           const n = parseNumber(v);
           return n === null ? String(v).trim() : `${(n * 100).toFixed(1)}%`;
@@ -349,14 +324,22 @@ const initExampleOutputCharts = async () => {
       },
       {
         id: 'Total Credits',
-        keys: ['total_credits_base', 'total_credits', 'credits_total'],
+        byScenario: {
+          low: ['total_credits_p90'],
+          mid: ['total_credits_base', 'total_credits', 'credits_total'],
+          high: ['total_credits_p50'],
+        },
         format: (v) => {
           return formatCompactNumber(v);
         },
       },
       {
         id: 'Break-even Price',
-        keys: ['break_even_price', 'breakeven_price'],
+        byScenario: {
+          low: ['break_even_price', 'breakeven_price'],
+          mid: ['break_even_price', 'breakeven_price'],
+          high: ['break_even_price', 'breakeven_price'],
+        },
         format: (v) => {
           const n = parseNumber(v);
           return n === null ? String(v).trim() : `${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n)}/tCO2e`;
@@ -364,7 +347,11 @@ const initExampleOutputCharts = async () => {
       },
       {
         id: 'Payback Period',
-        keys: ['payback_year', 'payback_period', 'payback_years'],
+        byScenario: {
+          low: ['payback_year', 'payback_period', 'payback_years'],
+          mid: ['payback_year', 'payback_period', 'payback_years'],
+          high: ['payback_year', 'payback_period', 'payback_years'],
+        },
         format: (v) => {
           const n = parseNumber(v);
           if (n === null) return String(v).trim();
@@ -373,18 +360,64 @@ const initExampleOutputCharts = async () => {
       },
     ];
 
-    const cards = document.querySelectorAll('#example-kpis .kpi-card');
-    cards.forEach((card) => {
-      const title = card.querySelector('h3')?.textContent?.trim();
-      const body = card.querySelector('.kpi-value');
-      if (!title || !body) return;
-      const cfg = kpis.find((k) => k.id === title);
-      if (!cfg) return;
+    const renderScenario = (scenario) => {
+      const cards = document.querySelectorAll('#example-kpis .kpi-card');
+      cards.forEach((card) => {
+        const title = card.querySelector('h3')?.textContent?.trim();
+        const body = card.querySelector('.kpi-value');
+        if (!title || !body) return;
+        const cfg = kpis.find((k) => k.id === title);
+        if (!cfg) return;
 
-      const rawValue = cfg.keys.map((k) => map.get(k)).find((v) => v !== undefined && String(v).trim() !== '');
-      if (!rawValue) return;
-      body.textContent = cfg.format ? cfg.format(rawValue, map) : String(rawValue).trim();
-    });
+        const keys = cfg.byScenario?.[scenario] || cfg.byScenario?.mid || [];
+        const rawValue = keys.map((k) => map.get(k)).find((v) => v !== undefined && String(v).trim() !== '');
+        if (!rawValue) return;
+        body.textContent = cfg.format ? cfg.format(rawValue, map) : String(rawValue).trim();
+      });
+
+      const revenueSeries = scenario === 'low'
+        ? rows.map((r) => r.revenue_low)
+        : scenario === 'high'
+          ? rows.map((r) => r.revenue_high)
+          : rows.map((r) => r.revenue_base);
+
+      const creditsSeries = scenario === 'low'
+        ? rows.map((r) => r.credits_p90)
+        : scenario === 'high'
+          ? rows.map((r) => r.credits_p50)
+          : rows.map((r) => r.credits_base);
+
+      const label = scenario === 'low' ? 'Low price' : scenario === 'high' ? 'High price' : 'Mid price';
+
+      buildLineChart('revenue-chart', 'Projected revenue', labels, [{
+        label,
+        data: revenueSeries,
+        borderColor: '#1F3D2B',
+        backgroundColor: '#1F3D2B',
+        borderWidth: 3,
+        pointRadius: 0,
+        tension: 0.3,
+      }]);
+
+      buildLineChart('credits-chart', 'Projected credit issuance', labels, [{
+        label,
+        data: creditsSeries,
+        borderColor: '#4F7C5A',
+        backgroundColor: '#4F7C5A',
+        borderWidth: 3,
+        pointRadius: 0,
+        tension: 0.3,
+      }]);
+    };
+
+    const initialScenario = scenarioSelect?.value || 'mid';
+    renderScenario(initialScenario);
+
+    if (scenarioSelect) {
+      scenarioSelect.addEventListener('change', () => {
+        renderScenario(scenarioSelect.value || 'mid');
+      });
+    }
 
     const finalRow = rows[rows.length - 1];
     const finalRevenue = parseNumber(finalRow?.revenue_base);
