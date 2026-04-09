@@ -257,13 +257,13 @@ a { color: inherit; text-decoration: none; }
   justify-content: center;
 }
 
-.engine-slide:nth-child(1) { background: linear-gradient(160deg, #f4f1ea, #ece6d9); border-color: #d7ccb6; }
-.engine-slide:nth-child(2) { background: linear-gradient(160deg, #f0ecdf, #e6decb); border-color: #cfbfa1; }
-.engine-slide:nth-child(3) { background: linear-gradient(160deg, #ebe6d4, #dfd4bc); border-color: #c5b18f; }
-.engine-slide:nth-child(4) { background: linear-gradient(160deg, #e6e0c8, #d8ccb1); border-color: #bca67f; }
-.engine-slide:nth-child(5) { background: linear-gradient(160deg, #dfd8bb, #d0c29f); border-color: #af976d; }
-.engine-slide:nth-child(6) { background: linear-gradient(160deg, #d8d0ad, #c7b78f); border-color: #a1875d; }
-.engine-slide:nth-child(7) { background: linear-gradient(160deg, #d1c7a0, #bca97e); border-color: #93794f; }
+.engine-slide:nth-child(1) { background: linear-gradient(160deg, #edf3ef, #dfe9e3); border-color: #c0d0c5; }
+.engine-slide:nth-child(2) { background: linear-gradient(160deg, #e3ece6, #d3e0d8); border-color: #b1c6b7; }
+.engine-slide:nth-child(3) { background: linear-gradient(160deg, #d8e5dd, #c5d7cc); border-color: #9fb8a8; }
+.engine-slide:nth-child(4) { background: linear-gradient(160deg, #cdded4, #b8cdbf); border-color: #8ca994; }
+.engine-slide:nth-child(5) { background: linear-gradient(160deg, #c1d6ca, #a8bfaf); border-color: #789982; }
+.engine-slide:nth-child(6) { background: linear-gradient(160deg, #b4cdbf, #96b09f); border-color: #65876f; }
+.engine-slide:nth-child(7) { background: linear-gradient(160deg, #a6c2b2, #839d8e); border-color: #526e5d; }
 
 .step-num {
   position: absolute;
