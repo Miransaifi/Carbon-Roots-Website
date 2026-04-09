@@ -491,6 +491,10 @@ a { color: inherit; text-decoration: none; }
   scroll-margin-top: 210px;
 }
 
+#intake {
+  scroll-margin-top: 210px;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
