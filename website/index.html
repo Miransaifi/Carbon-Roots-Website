@@ -256,6 +256,44 @@
           <p class="lead" style="color:#4f5851; margin-top:1.25rem;">
             Typical turnaround: 3-7 days for standard pre-feasibility, 7-14 days for more complex or data-heavy projects.
           </p>
+
+          <div class="example-output" aria-label="Example output" id="example-output">
+            <p class="eyebrow">Example output</p>
+
+            <div class="kpi-grid" id="example-kpis" aria-label="Example output KPI cards">
+              <article class="kpi-card">
+                <h3>NPV</h3>
+                <p>Not available in current LOOKR_ISSUANCE data</p>
+              </article>
+              <article class="kpi-card">
+                <h3>IRR</h3>
+                <p>Not available in current LOOKR_ISSUANCE data</p>
+              </article>
+              <article class="kpi-card">
+                <h3>Total Credits</h3>
+                <p>Not available in current LOOKR_ISSUANCE data</p>
+              </article>
+              <article class="kpi-card">
+                <h3>Break-even Price</h3>
+                <p>Not available in current LOOKR_ISSUANCE data</p>
+              </article>
+              <article class="kpi-card">
+                <h3>Payback Period</h3>
+                <p>Not available in current LOOKR_ISSUANCE data</p>
+              </article>
+            </div>
+
+            <div class="chart-grid" aria-label="Example output charts">
+              <article class="chart-card">
+                <h3>Projected revenue</h3>
+                <canvas id="revenue-chart" aria-label="Projected revenue chart" role="img"></canvas>
+              </article>
+              <article class="chart-card">
+                <h3>Projected credit issuance</h3>
+                <canvas id="credits-chart" aria-label="Projected credit issuance chart" role="img"></canvas>
+              </article>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -375,6 +413,7 @@
       </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
