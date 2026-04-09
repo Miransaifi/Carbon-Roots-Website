@@ -362,24 +362,38 @@
         <div class="container">
           <p class="eyebrow">Project intake</p>
           <h2>Share the key inputs needed to run the Carbon Roots engine.</h2>
-          <form id="intake-form" class="intake-form" action="mailto:hello@carbonroots.co" method="post" enctype="text/plain">
-            <div class="form-grid">
+          <form id="intake-form" class="intake-form intake-wizard" action="mailto:hello@carbonroots.co" method="post" enctype="text/plain">
+            <p class="wizard-progress" id="wizard-progress">Step 1 of 9</p>
+
+            <div class="form-step is-active" data-step="1">
               <label>
                 Full name
                 <input type="text" name="full_name" placeholder="Your name" required />
               </label>
+            </div>
+
+            <div class="form-step" data-step="2" hidden>
               <label>
                 Email
                 <input type="email" name="email" placeholder="you@example.com" required />
               </label>
+            </div>
+
+            <div class="form-step" data-step="3" hidden>
               <label>
                 Country / region
                 <input type="text" name="country_region" placeholder="e.g. Kenya, Rift Valley" required />
               </label>
+            </div>
+
+            <div class="form-step" data-step="4" hidden>
               <label>
                 Total land area (hectares)
                 <input type="number" name="land_area_ha" placeholder="e.g. 1250" min="0" step="0.1" required />
               </label>
+            </div>
+
+            <div class="form-step" data-step="5" hidden>
               <label>
                 Land type
                 <select name="land_type" required>
@@ -389,6 +403,9 @@
                   <option>Mixed</option>
                 </select>
               </label>
+            </div>
+
+            <div class="form-step" data-step="6" hidden>
               <label>
                 Project concept
                 <select name="project_concept" required>
@@ -398,21 +415,36 @@
                   <option>Restoration</option>
                 </select>
               </label>
+            </div>
+
+            <div class="form-step" data-step="7" hidden>
               <label>
                 Timeline expectations
                 <input type="text" name="timeline" placeholder="e.g. first issuance target / implementation window" required />
               </label>
+            </div>
+
+            <div class="form-step" data-step="8" hidden>
               <label>
                 Species intentions (optional)
                 <input type="text" name="species_intentions" placeholder="If known" />
               </label>
             </div>
-            <label>
-              Notes, assumptions, or existing studies (optional)
-              <textarea name="notes" rows="5" placeholder="Add any available boundaries, prior studies, land-use context, or implementation assumptions."></textarea>
-            </label>
+
+            <div class="form-step" data-step="9" hidden>
+              <label>
+                Notes, assumptions, or existing studies (optional)
+                <textarea name="notes" rows="5" placeholder="Add any available boundaries, prior studies, land-use context, or implementation assumptions."></textarea>
+              </label>
+            </div>
+
+            <div class="wizard-actions">
+              <button type="button" class="btn btn-ghost" id="wizard-back" hidden>Back</button>
+              <button type="button" class="btn" id="wizard-next">Next</button>
+              <button type="submit" class="btn" id="wizard-submit" hidden>Send intake details</button>
+            </div>
+
             <div class="intake-actions">
-              <button type="submit" class="btn">Send intake details</button>
               <p>
                 We work with incomplete data. Part of this process is identifying what is missing.
               </p>

@@ -501,6 +501,32 @@ section[id] {
   gap: 0.8rem;
 }
 
+.intake-wizard {
+  max-width: 760px;
+}
+
+.wizard-progress {
+  margin: 0 0 0.75rem;
+  color: #5e665f;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.form-step {
+  animation: fadeIn 0.18s ease;
+}
+
+.wizard-actions {
+  margin-top: 0.95rem;
+  display: flex;
+  gap: 0.65rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .intake-form label {
   display: flex;
   flex-direction: column;

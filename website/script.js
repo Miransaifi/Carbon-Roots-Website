@@ -420,3 +420,66 @@ const initExampleOutputCharts = async () => {
 };
 
 initExampleOutputCharts();
+
+const intakeForm = document.querySelector('#intake-form.intake-wizard');
+if (intakeForm) {
+  const steps = Array.from(intakeForm.querySelectorAll('.form-step'));
+  const backBtn = intakeForm.querySelector('#wizard-back');
+  const nextBtn = intakeForm.querySelector('#wizard-next');
+  const submitBtn = intakeForm.querySelector('#wizard-submit');
+  const progress = intakeForm.querySelector('#wizard-progress');
+  let currentStep = 0;
+
+  const updateStep = () => {
+    steps.forEach((step, i) => {
+      const active = i === currentStep;
+      step.hidden = !active;
+      step.classList.toggle('is-active', active);
+    });
+
+    if (progress) {
+      progress.textContent = `Step ${currentStep + 1} of ${steps.length}`;
+    }
+
+    if (backBtn) backBtn.hidden = currentStep === 0;
+    if (nextBtn) nextBtn.hidden = currentStep === steps.length - 1;
+    if (submitBtn) submitBtn.hidden = currentStep !== steps.length - 1;
+
+    const activeField = steps[currentStep]?.querySelector('input, select, textarea');
+    if (activeField) activeField.focus();
+  };
+
+  const validateCurrentStep = () => {
+    const fields = Array.from(steps[currentStep].querySelectorAll('input, select, textarea'));
+    for (const field of fields) {
+      if (!field.checkValidity()) {
+        field.reportValidity();
+        return false;
+      }
+    }
+    return true;
+  };
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      if (!validateCurrentStep()) return;
+      currentStep = Math.min(steps.length - 1, currentStep + 1);
+      updateStep();
+    });
+  }
+
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      currentStep = Math.max(0, currentStep - 1);
+      updateStep();
+    });
+  }
+
+  intakeForm.addEventListener('submit', (event) => {
+    if (!validateCurrentStep()) {
+      event.preventDefault();
+    }
+  });
+
+  updateStep();
+}
