@@ -78,7 +78,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 96px;
+  min-height: 132px;
   gap: 1rem;
 }
 
@@ -90,7 +90,7 @@ a {
 }
 
 .brand-logo {
-  height: 76px;
+  height: 112px;
   width: auto;
   border-radius: 6px;
   display: block;
@@ -349,7 +349,7 @@ a {
 
 @media (max-width: 820px) {
   .brand-logo {
-    height: 62px;
+    height: 84px;
   }
 
   .menu-toggle {
@@ -359,7 +359,7 @@ a {
   .main-nav {
     position: absolute;
     right: 4vw;
-    top: 92px;
+    top: 120px;
     background: #171d1a;
     border: 1px solid rgba(199, 168, 102, 0.25);
     border-radius: 12px;
