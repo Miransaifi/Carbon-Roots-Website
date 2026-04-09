@@ -214,15 +214,35 @@ const buildLineChart = (canvasId, title, labels, series) => {
 const initExampleOutputCharts = async () => {
   const revenueCanvas = document.querySelector('#revenue-chart');
   const creditsCanvas = document.querySelector('#credits-chart');
+  const revenueEmpty = document.querySelector('#revenue-empty');
+  const creditsEmpty = document.querySelector('#credits-empty');
   if (!revenueCanvas || !creditsCanvas) return;
+
+  const showEmpty = () => {
+    if (revenueEmpty) revenueEmpty.hidden = false;
+    if (creditsEmpty) creditsEmpty.hidden = false;
+  };
+
+  const hideEmpty = () => {
+    if (revenueEmpty) revenueEmpty.hidden = true;
+    if (creditsEmpty) creditsEmpty.hidden = true;
+  };
 
   try {
     const response = await fetch('assets/data/LOOKR_ISSUANCE.csv', { cache: 'no-store' });
-    if (!response.ok) return;
+    if (!response.ok) {
+      showEmpty();
+      return;
+    }
 
     const csvText = await response.text();
     const rows = parseIssuanceCsv(csvText);
-    if (!rows.length) return;
+    if (!rows.length) {
+      showEmpty();
+      return;
+    }
+
+    hideEmpty();
 
     const labels = rows.map((r) => String(r.year));
 
@@ -237,8 +257,45 @@ const initExampleOutputCharts = async () => {
       p50: rows.map((r) => r.credits_p50),
       p90: rows.map((r) => r.credits_p90),
     });
+
+    const map = new Map();
+    const outputResponse = await fetch('assets/data/LOOKR_OUTPUT.csv', { cache: 'no-store' });
+    if (outputResponse.ok) {
+      const outputText = await outputResponse.text();
+      const outputLines = outputText
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+
+      if (outputLines.length > 1) {
+        const outputHeaders = parseCsvRow(outputLines[0]).map((h) => h.trim().toLowerCase());
+        const outputRow = parseCsvRow(outputLines[1]);
+        outputHeaders.forEach((header, i) => map.set(header, outputRow[i]));
+      }
+    }
+
+    const kpis = [
+      { id: 'NPV', keys: ['npv', 'project_npv'] },
+      { id: 'IRR', keys: ['irr', 'project_irr'] },
+      { id: 'Total Credits', keys: ['total_credits', 'credits_total'] },
+      { id: 'Break-even Price', keys: ['break_even_price', 'breakeven_price'] },
+      { id: 'Payback Period', keys: ['payback_period', 'payback_years'] },
+    ];
+
+    const cards = document.querySelectorAll('#example-kpis .kpi-card');
+    cards.forEach((card) => {
+      const title = card.querySelector('h3')?.textContent?.trim();
+      const body = card.querySelector('p');
+      if (!title || !body) return;
+      const cfg = kpis.find((k) => k.id === title);
+      if (!cfg) return;
+
+      const rawValue = cfg.keys.map((k) => map.get(k)).find((v) => v !== undefined && String(v).trim() !== '');
+      if (!rawValue) return;
+      body.textContent = String(rawValue).trim();
+    });
   } catch (error) {
-    // Intentionally fail quietly for missing/unavailable data source.
+    showEmpty();
   }
 };
 

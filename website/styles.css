@@ -398,6 +398,12 @@ a { color: inherit; text-decoration: none; }
   display: block;
 }
 
+.chart-empty {
+  margin: 0.5rem 0 0;
+  color: #5e665f;
+  font-size: 0.86rem;
+}
+
 .section-contact {
   background: linear-gradient(165deg, #101714, #0c1210);
   color: var(--text-light);
