@@ -89,17 +89,11 @@ a {
   color: var(--text-light);
 }
 
-.brand-mark {
-  width: 38px;
+.brand-logo {
   height: 38px;
-  border-radius: 10px;
-  border: 1px solid rgba(199, 168, 102, 0.65);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--gold);
-  font-weight: 700;
-  font-size: 0.82rem;
+  width: auto;
+  border-radius: 6px;
+  display: block;
 }
 
 .brand-text-wrap {
@@ -198,6 +192,13 @@ a {
 .hero p {
   color: #d4d9d2;
   max-width: 62ch;
+}
+
+.hero-logo {
+  width: min(560px, 92%);
+  height: auto;
+  display: block;
+  margin: 0 0 1rem;
 }
 
 .hero-cta {
