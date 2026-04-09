@@ -244,11 +244,11 @@ a { color: inherit; text-decoration: none; }
   flex: 0 0 clamp(300px, 38vw, 420px);
   max-width: 420px;
   min-width: 300px;
-  min-height: 420px;
+  min-height: 340px;
   background: #fff;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.15rem;
+  padding: 0.95rem 1rem;
 }
 
 .engine-slide:nth-child(1) { background: linear-gradient(160deg, #ffffff, #f7f5ef); border-color: #e7dcc5; }
@@ -271,7 +271,16 @@ a { color: inherit; text-decoration: none; }
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.5rem;
+}
+
+.engine-slide h3 {
+  margin-bottom: 0.5rem;
+}
+
+.engine-slide p {
+  margin-bottom: 0;
+  line-height: 1.55;
 }
 
 .steps li {
@@ -448,7 +457,7 @@ a { color: inherit; text-decoration: none; }
     flex-basis: 86%;
     max-width: none;
     min-width: 0;
-    min-height: 360px;
+    min-height: 300px;
   }
   .hero { padding: 5.2rem 0 4.5rem; }
 }
