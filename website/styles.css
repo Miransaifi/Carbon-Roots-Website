@@ -233,7 +233,7 @@ a { color: inherit; text-decoration: none; }
   padding: 0;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(280px, 1fr);
+  grid-auto-columns: minmax(280px, calc(100% - 96px));
   gap: 0.9rem;
   overflow-x: auto;
   scroll-behavior: smooth;
@@ -440,7 +440,7 @@ a { color: inherit; text-decoration: none; }
   }
 
   .engine-track {
-    grid-auto-columns: 92%;
+    grid-auto-columns: 88%;
   }
   .hero { padding: 5.2rem 0 4.5rem; }
 }
