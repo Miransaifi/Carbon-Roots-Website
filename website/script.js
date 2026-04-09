@@ -19,3 +19,19 @@ const yearNode = document.querySelector('#year');
 if (yearNode) {
   yearNode.textContent = new Date().getFullYear();
 }
+
+const engineTrack = document.querySelector('#engine-track');
+const enginePrev = document.querySelector('#engine-prev');
+const engineNext = document.querySelector('#engine-next');
+
+if (engineTrack && enginePrev && engineNext) {
+  const slideBy = () => engineTrack.clientWidth * 0.9;
+
+  enginePrev.addEventListener('click', () => {
+    engineTrack.scrollBy({ left: -slideBy(), behavior: 'smooth' });
+  });
+
+  engineNext.addEventListener('click', () => {
+    engineTrack.scrollBy({ left: slideBy(), behavior: 'smooth' });
+  });
+}
