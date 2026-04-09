@@ -194,13 +194,6 @@ a {
   max-width: 62ch;
 }
 
-.hero-logo {
-  width: min(560px, 92%);
-  height: auto;
-  display: block;
-  margin: 0 0 1rem;
-}
-
 .hero-cta {
   display: flex;
   gap: 0.8rem;
