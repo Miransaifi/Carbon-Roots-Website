@@ -213,6 +213,69 @@
           </div>
         </div>
       </section>
+
+      <section id="intake" class="section">
+        <div class="container">
+          <p class="eyebrow">Project intake</p>
+          <h2>Share the key inputs needed to run the Carbon Roots engine.</h2>
+          <form class="intake-form" action="mailto:hello@carbonroots.co" method="post" enctype="text/plain">
+            <div class="form-grid">
+              <label>
+                Full name
+                <input type="text" name="full_name" placeholder="Your name" required />
+              </label>
+              <label>
+                Email
+                <input type="email" name="email" placeholder="you@example.com" required />
+              </label>
+              <label>
+                Country / region
+                <input type="text" name="country_region" placeholder="e.g. Kenya, Rift Valley" required />
+              </label>
+              <label>
+                Total land area (hectares)
+                <input type="number" name="land_area_ha" placeholder="e.g. 1250" min="0" step="0.1" required />
+              </label>
+              <label>
+                Land type
+                <select name="land_type" required>
+                  <option value="" selected disabled>Select one</option>
+                  <option>Degraded</option>
+                  <option>Agricultural</option>
+                  <option>Mixed</option>
+                </select>
+              </label>
+              <label>
+                Project concept
+                <select name="project_concept" required>
+                  <option value="" selected disabled>Select one</option>
+                  <option>ARR</option>
+                  <option>Agroforestry</option>
+                  <option>Restoration</option>
+                </select>
+              </label>
+              <label>
+                Timeline expectations
+                <input type="text" name="timeline" placeholder="e.g. first issuance target / implementation window" required />
+              </label>
+              <label>
+                Species intentions (optional)
+                <input type="text" name="species_intentions" placeholder="If known" />
+              </label>
+            </div>
+            <label>
+              Notes, assumptions, or existing studies (optional)
+              <textarea name="notes" rows="5" placeholder="Add any available boundaries, prior studies, land-use context, or implementation assumptions."></textarea>
+            </label>
+            <div class="intake-actions">
+              <button type="submit" class="btn">Send intake details</button>
+              <p>
+                We work with incomplete data. Part of this process is identifying what is missing.
+              </p>
+            </div>
+          </form>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">

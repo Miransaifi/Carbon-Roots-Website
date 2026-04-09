@@ -270,6 +270,60 @@ a { color: inherit; text-decoration: none; }
 .footer-wrap { display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-size: 0.92rem; }
 .site-footer a { color: var(--gold); }
 
+.intake-form {
+  margin-top: 1.2rem;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.15rem;
+  box-shadow: var(--shadow);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.intake-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.intake-form input,
+.intake-form select,
+.intake-form textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  color: var(--text);
+  background: #fff;
+}
+
+.intake-form textarea {
+  margin-top: 0.3rem;
+  resize: vertical;
+}
+
+.intake-actions {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1rem;
+  align-items: center;
+}
+
+.intake-actions p {
+  margin: 0;
+  color: #5e665f;
+  font-size: 0.92rem;
+}
+
 @media (max-width: 1080px) {
   .cards-3x { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -307,6 +361,6 @@ a { color: inherit; text-decoration: none; }
   .main-nav.open { display: flex; }
   .main-nav .btn { width: 100%; }
 
-  .cards-3x, .steps, .boundary-grid { grid-template-columns: 1fr; }
+  .cards-3x, .steps, .boundary-grid, .form-grid { grid-template-columns: 1fr; }
   .hero { padding: 5.2rem 0 4.5rem; }
 }
