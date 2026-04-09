@@ -431,14 +431,17 @@ if (intakeForm) {
   const landTypeSelect = intakeForm.querySelector('#land-type');
   const landTypeOtherWrap = intakeForm.querySelector('#land-type-other-wrap');
   const landTypeOther = intakeForm.querySelector('#land-type-other');
+  let landTypeTouched = false;
   let currentStep = 0;
 
   const updateLandTypeOther = () => {
     if (!landTypeSelect || !landTypeOtherWrap || !landTypeOther) return;
-    const isOther = landTypeSelect.value === 'Other (specify)';
-    landTypeOtherWrap.hidden = !isOther;
-    landTypeOther.required = isOther;
-    if (!isOther) {
+    const selectedText = landTypeSelect.options[landTypeSelect.selectedIndex]?.textContent?.trim() || '';
+    const isOther = selectedText === 'Other (specify)';
+    const shouldShow = landTypeTouched && isOther;
+    landTypeOtherWrap.hidden = !shouldShow;
+    landTypeOther.required = shouldShow;
+    if (!shouldShow) {
       landTypeOther.value = '';
     }
   };
@@ -489,7 +492,10 @@ if (intakeForm) {
   }
 
   if (landTypeSelect) {
-    landTypeSelect.addEventListener('change', updateLandTypeOther);
+    landTypeSelect.addEventListener('change', () => {
+      landTypeTouched = true;
+      updateLandTypeOther();
+    });
   }
 
   intakeForm.addEventListener('submit', (event) => {
