@@ -116,6 +116,8 @@ const parseIssuanceCsv = (csvText) => {
       const credits_base = parseNumber(cols[idx.credits_base]);
       const credits_p50 = parseNumber(cols[idx.credits_p50]);
       const credits_p90 = parseNumber(cols[idx.credits_p90]);
+      const revenue_low = parseNumber(cols[headers.indexOf('revenue_low')]);
+      const revenue_high = parseNumber(cols[headers.indexOf('revenue_high')]);
 
       if (
         year === null ||
@@ -137,6 +139,8 @@ const parseIssuanceCsv = (csvText) => {
         credits_base,
         credits_p50,
         credits_p90,
+        revenue_low,
+        revenue_high,
       };
     })
     .filter(Boolean)
@@ -375,39 +379,86 @@ const initExampleOutputCharts = async () => {
         body.textContent = cfg.format ? cfg.format(rawValue, map) : String(rawValue).trim();
       });
 
-      const revenueSeries = scenario === 'low'
-        ? rows.map((r) => r.revenue_low)
-        : scenario === 'high'
-          ? rows.map((r) => r.revenue_high)
-          : rows.map((r) => r.revenue_base);
+      const baseRevenue = rows.map((r) => r.revenue_base);
+      const p50Revenue = rows.map((r) => r.revenue_p50);
+      const p90Revenue = rows.map((r) => r.revenue_p90);
 
-      const creditsSeries = scenario === 'low'
-        ? rows.map((r) => r.credits_p90)
-        : scenario === 'high'
-          ? rows.map((r) => r.credits_p50)
-          : rows.map((r) => r.credits_base);
+      let revBase = baseRevenue;
+      let revP50 = p50Revenue;
+      let revP90 = p90Revenue;
 
-      const label = scenario === 'low' ? 'Low price' : scenario === 'high' ? 'High price' : 'Mid price';
+      if (scenario === 'low' || scenario === 'high') {
+        const scenarioBase = rows.map((r) => (scenario === 'low' ? r.revenue_low : r.revenue_high));
+        revBase = scenarioBase.map((v, i) => (v !== null && v !== undefined ? v : baseRevenue[i]));
+        revP50 = revBase.map((v, i) => {
+          if (!baseRevenue[i]) return p50Revenue[i];
+          return p50Revenue[i] * (v / baseRevenue[i]);
+        });
+        revP90 = revBase.map((v, i) => {
+          if (!baseRevenue[i]) return p90Revenue[i];
+          return p90Revenue[i] * (v / baseRevenue[i]);
+        });
+      }
 
-      buildLineChart('revenue-chart', 'Projected revenue', labels, [{
-        label,
-        data: revenueSeries,
-        borderColor: '#1F3D2B',
-        backgroundColor: '#1F3D2B',
-        borderWidth: 3,
-        pointRadius: 0,
-        tension: 0.3,
-      }]);
+      buildLineChart('revenue-chart', 'Projected revenue', labels, [
+        {
+          label: 'Base',
+          data: revBase,
+          borderColor: '#1F3D2B',
+          backgroundColor: '#1F3D2B',
+          borderWidth: 3,
+          pointRadius: 0,
+          tension: 0.3,
+        },
+        {
+          label: 'P50',
+          data: revP50,
+          borderColor: '#4F7C5A',
+          backgroundColor: '#4F7C5A',
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.3,
+        },
+        {
+          label: 'P90',
+          data: revP90,
+          borderColor: '#A7BFA9',
+          backgroundColor: '#A7BFA9',
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.3,
+        },
+      ]);
 
-      buildLineChart('credits-chart', 'Projected credit issuance', labels, [{
-        label,
-        data: creditsSeries,
-        borderColor: '#4F7C5A',
-        backgroundColor: '#4F7C5A',
-        borderWidth: 3,
-        pointRadius: 0,
-        tension: 0.3,
-      }]);
+      buildLineChart('credits-chart', 'Projected credit issuance', labels, [
+        {
+          label: 'Base',
+          data: rows.map((r) => r.credits_base),
+          borderColor: '#1F3D2B',
+          backgroundColor: '#1F3D2B',
+          borderWidth: 3,
+          pointRadius: 0,
+          tension: 0.3,
+        },
+        {
+          label: 'P50',
+          data: rows.map((r) => r.credits_p50),
+          borderColor: '#4F7C5A',
+          backgroundColor: '#4F7C5A',
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.3,
+        },
+        {
+          label: 'P90',
+          data: rows.map((r) => r.credits_p90),
+          borderColor: '#A7BFA9',
+          backgroundColor: '#A7BFA9',
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.3,
+        },
+      ]);
     };
 
     const initialScenario = scenarioSelect?.value || 'mid';
