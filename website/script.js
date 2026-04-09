@@ -151,6 +151,12 @@ const formatCompactNumber = (value) => {
   }).format(n);
 };
 
+const formatPercent = (value, digits = 1) => {
+  const n = parseNumber(value);
+  if (n === null) return String(value).trim();
+  return `${(n * 100).toFixed(digits)}%`;
+};
+
 const buildLineChart = (canvasId, title, labels, series) => {
   const canvas = document.querySelector(`#${canvasId}`);
   if (!canvas || !window.Chart) return;
@@ -351,9 +357,20 @@ const initExampleOutputCharts = async () => {
       {
         id: 'Payback Period',
         keys: ['payback_year', 'payback_period', 'payback_years'],
-        format: (v) => {
+        format: (v, rowMap) => {
           const n = parseNumber(v);
-          return n === null ? String(v).trim() : `${new Intl.NumberFormat('en-GB', { maximumFractionDigits: 1 }).format(n)} years`;
+          if (n === null) return String(v).trim();
+
+          const achieved = parseNumber(rowMap.get('payback_achieved_flag'));
+          if (achieved === 0) return 'Not achieved in model horizon';
+
+          const startYear = parseNumber(rowMap.get('start_year'));
+          if (startYear !== null && n >= startYear) {
+            const yearsFromStart = Math.max(0, n - startYear);
+            return `Year ${yearsFromStart} (${Math.round(n)})`;
+          }
+
+          return `${new Intl.NumberFormat('en-GB', { maximumFractionDigits: 1 }).format(n)} years`;
         },
       },
     ];
@@ -368,7 +385,7 @@ const initExampleOutputCharts = async () => {
 
       const rawValue = cfg.keys.map((k) => map.get(k)).find((v) => v !== undefined && String(v).trim() !== '');
       if (!rawValue) return;
-      body.textContent = cfg.format ? cfg.format(rawValue) : String(rawValue).trim();
+      body.textContent = cfg.format ? cfg.format(rawValue, map) : String(rawValue).trim();
     });
 
     const finalRow = rows[rows.length - 1];
@@ -377,10 +394,34 @@ const initExampleOutputCharts = async () => {
     const finalRevenueP90 = parseNumber(finalRow?.revenue_p90);
     const finalCreditsP90 = parseNumber(finalRow?.credits_p90);
     if (rows.length && finalRevenue !== null && finalCredits !== null && finalRevenueP90 !== null && finalCreditsP90 !== null) {
+      const totalRevenue = parseNumber(map.get('total_revenue'));
+      const totalCreditsBase = parseNumber(map.get('total_credits_base'));
+      const creditDropP50 = parseNumber(map.get('credit_drop_p50'));
+      const creditDropP90 = parseNumber(map.get('credit_drop_p90'));
+      const npvDetPct = parseNumber(map.get('npv_deterioration_pct'));
+      const irrBase = parseNumber(map.get('irr_base'));
+      const breakEven = parseNumber(map.get('break_even_price'));
+
+      const insight1 = totalRevenue !== null && totalCreditsBase !== null
+        ? `Base-case output indicates ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(totalRevenue)} potential revenue from ${formatCompactNumber(totalCreditsBase)} total credits across the model period.`
+        : `Base-case revenue trajectory reaches ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(finalRevenue)} by ${finalRow.year}.`;
+
+      const insight2 = creditDropP50 !== null && creditDropP90 !== null
+        ? `Risk-adjusted issuance falls by ${formatPercent(creditDropP50)} at P50 and ${formatPercent(creditDropP90)} at P90 versus base, so the downside spread is material.`
+        : `P90 trajectory remains more conservative at ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(finalRevenueP90)} revenue and ${formatCompactNumber(finalCreditsP90)} credits.`;
+
+      const insight3Parts = [];
+      if (irrBase !== null) insight3Parts.push(`base IRR is ${formatPercent(irrBase)}`);
+      if (breakEven !== null) insight3Parts.push(`break-even price is ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(breakEven)}/tCO2e`);
+      if (npvDetPct !== null) insight3Parts.push(`NPV deterioration under downside assumptions is ${formatPercent(npvDetPct)}`);
+      const insight3 = insight3Parts.length
+        ? `Commercial resilience check: ${insight3Parts.join(', ')}.`
+        : `Base-case credit issuance reaches ${formatCompactNumber(finalCredits)} credits by ${finalRow.year}.`;
+
       setInsights([
-        `Base-case revenue trajectory reaches ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(finalRevenue)} by ${finalRow.year}.`,
-        `Base-case credit issuance reaches ${formatCompactNumber(finalCredits)} credits by ${finalRow.year}.`,
-        `P90 trajectory remains more conservative at ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(finalRevenueP90)} revenue and ${formatCompactNumber(finalCreditsP90)} credits.`,
+        insight1,
+        insight2,
+        insight3,
       ]);
     }
   } catch (error) {
