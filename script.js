@@ -347,9 +347,9 @@ const initExampleOutputCharts = async () => {
       {
         id: 'Total Credits',
         byScenario: {
-          low: ['total_credits_p90'],
+          low: ['total_credits_base', 'total_credits', 'credits_total'],
           mid: ['total_credits_base', 'total_credits', 'credits_total'],
-          high: ['total_credits_p50'],
+          high: ['total_credits_base', 'total_credits', 'credits_total'],
         },
         format: (v) => {
           return formatCompactNumber(v);
@@ -358,9 +358,9 @@ const initExampleOutputCharts = async () => {
       {
         id: 'Break-even Price',
         byScenario: {
-          low: ['break_even_price', 'breakeven_price'],
-          mid: ['break_even_price', 'breakeven_price'],
-          high: ['break_even_price', 'breakeven_price'],
+          low: ['break_even_price_low', 'breakeven_price_low', 'break_even_price', 'breakeven_price'],
+          mid: ['break_even_price_mid', 'breakeven_price_mid', 'break_even_price', 'breakeven_price'],
+          high: ['break_even_price_high', 'breakeven_price_high', 'break_even_price', 'breakeven_price'],
         },
         format: (v) => {
           const n = parseNumber(v);
@@ -370,9 +370,9 @@ const initExampleOutputCharts = async () => {
       {
         id: 'Payback Period',
         byScenario: {
-          low: ['payback_year', 'payback_period', 'payback_years'],
-          mid: ['payback_year', 'payback_period', 'payback_years'],
-          high: ['payback_year', 'payback_period', 'payback_years'],
+          low: ['payback_low', 'payback_year_low', 'payback_period_low', 'payback_year', 'payback_period', 'payback_years'],
+          mid: ['payback_mid', 'payback_year_mid', 'payback_period_mid', 'payback_year', 'payback_period', 'payback_years'],
+          high: ['payback_high', 'payback_year_high', 'payback_period_high', 'payback_year', 'payback_period', 'payback_years'],
         },
         format: (v) => {
           const n = parseNumber(v);
@@ -487,9 +487,7 @@ const initExampleOutputCharts = async () => {
       const finalRevenue = parseNumber(
         scenario === 'low' ? finalRow.revenue_low : scenario === 'high' ? finalRow.revenue_high : finalRow.revenue_base,
       );
-      const finalCredits = parseNumber(
-        scenario === 'low' ? finalRow.credits_p90 : scenario === 'high' ? finalRow.credits_p50 : finalRow.credits_base,
-      );
+      const finalCredits = parseNumber(finalRow.credits_base);
       const npv = parseNumber(
         scenario === 'low'
           ? (map.get('npv_low') ?? map.get('npv_p90'))
