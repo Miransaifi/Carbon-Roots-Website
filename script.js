@@ -237,17 +237,31 @@ const initExampleOutputCharts = async () => {
   const exampleProjectTitle = document.querySelector('#example-project-title');
   const exampleProjectContext = document.querySelector('#example-project-context');
   const insightStrip = document.querySelector('#example-insights');
+  const insightClassification = document.querySelector('#insight-classification');
   const insightList = document.querySelector('#insight-list');
+  const nextStepsList = document.querySelector('#next-steps-list');
   const scenarioSelect = document.querySelector('#scenario-select');
 
-  const setInsights = (items) => {
-    if (!insightStrip || !insightList || !items?.length) return;
+  const setInsights = ({ classification, indicates, nextSteps }) => {
+    if (!insightStrip || !insightList || !nextStepsList || !indicates?.length || !nextSteps?.length) return;
+    if (insightClassification) {
+      insightClassification.textContent = classification || '';
+    }
+
     insightList.innerHTML = '';
-    items.forEach((text) => {
+    indicates.forEach((text) => {
       const li = document.createElement('li');
       li.textContent = text;
       insightList.appendChild(li);
     });
+
+    nextStepsList.innerHTML = '';
+    nextSteps.forEach((text) => {
+      const li = document.createElement('li');
+      li.textContent = text;
+      nextStepsList.appendChild(li);
+    });
+
     insightStrip.hidden = false;
   };
 
@@ -479,72 +493,70 @@ const initExampleOutputCharts = async () => {
       ]);
     };
 
-    const buildScenarioInsights = (scenario) => {
-      const finalRow = rows[rows.length - 1];
-      if (!finalRow) return;
-
-      const scenarioLabel = scenario === 'low' ? 'Low-price' : scenario === 'high' ? 'High-price' : 'Mid-price';
-      const revenueKey = scenario === 'low' ? 'revenue_low' : scenario === 'high' ? 'revenue_high' : 'revenue_base';
-      const finalRevenue = parseNumber(finalRow[revenueKey]);
-      const finalCredits = parseNumber(finalRow.credits_base);
-
-      const pickScenarioValue = (lowKeys, midKeys, highKeys) => {
-        const keys = scenario === 'low' ? lowKeys : scenario === 'high' ? highKeys : midKeys;
-        const val = keys.map((k) => map.get(k)).find((v) => v !== undefined && String(v).trim() !== '');
-        return parseNumber(val);
-      };
-
-      const npv = pickScenarioValue(['npv_low', 'npv_p90'], ['npv_mid', 'npv_base'], ['npv_high', 'npv_p50']);
-      const irr = pickScenarioValue(['irr_low', 'irr_p90'], ['irr_mid', 'irr_base'], ['irr_high', 'irr_p50']);
-      const payback = pickScenarioValue(
-        ['payback_low', 'payback_year_low', 'payback_period_low', 'payback_year'],
-        ['payback_mid', 'payback_year_mid', 'payback_period_mid', 'payback_year'],
-        ['payback_high', 'payback_year_high', 'payback_period_high', 'payback_year'],
-      );
-      const npvMid = parseNumber(map.get('npv_mid') ?? map.get('npv_base'));
-      const irrMid = parseNumber(map.get('irr_mid') ?? map.get('irr_base'));
-      const breakEven = parseNumber(map.get('break_even_price'));
-
-      if (finalRevenue === null || finalCredits === null) return;
-
-      const compactUsd = (n) => new Intl.NumberFormat('en-GB', {
-        style: 'currency',
-        currency: 'USD',
-        notation: 'compact',
-        maximumFractionDigits: 1,
-      }).format(n);
+    const buildScenarioInsights = () => {
+      const pickValue = (keys) => parseNumber(keys.map((k) => map.get(k)).find((v) => v !== undefined && String(v).trim() !== ''));
+      const compactUsd = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(n);
+      const fullUsd = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n);
       const signedPct = (n) => `${n >= 0 ? '+' : ''}${(n * 100).toFixed(1)}%`;
 
-      const totalCredits = parseNumber(map.get('total_credits_base'))
-        ?? rows.reduce((sum, r) => sum + (parseNumber(r.credits_base) || 0), 0);
-      const sumRevenue = (key) => rows.reduce((sum, r) => sum + (parseNumber(r[key]) || 0), 0);
-      const revenueMid = sumRevenue('revenue_base');
-      const revenueScenario = sumRevenue(revenueKey);
-      const revenueDeltaVsMid = revenueMid > 0 ? (revenueScenario - revenueMid) / revenueMid : null;
-      const blendedPrice = totalCredits > 0 ? revenueScenario / totalCredits : null;
-      const priceHeadroom = blendedPrice !== null && breakEven !== null ? blendedPrice - breakEven : null;
+      const revenueLow = rows.reduce((sum, r) => sum + (parseNumber(r.revenue_low) || 0), 0);
+      const revenueMid = rows.reduce((sum, r) => sum + (parseNumber(r.revenue_base) || 0), 0);
+      const revenueHigh = rows.reduce((sum, r) => sum + (parseNumber(r.revenue_high) || 0), 0);
 
-      const insight1 = `${scenarioLabel} pathway reaches ${compactUsd(finalRevenue)} annual revenue by ${finalRow.year}, with issuance held at ${formatCompactNumber(finalCredits)} credits in-year.`;
+      const npvLow = pickValue(['npv_low', 'npv_p90']);
+      const npvMid = pickValue(['npv_mid', 'npv_base']);
+      const npvHigh = pickValue(['npv_high', 'npv_p50']);
+      const irrLow = pickValue(['irr_low', 'irr_p90']);
+      const irrMid = pickValue(['irr_mid', 'irr_base']);
+      const irrHigh = pickValue(['irr_high', 'irr_p50']);
+      const paybackLow = pickValue(['payback_low', 'payback_year']);
+      const paybackMid = pickValue(['payback_mid', 'payback_year']);
+      const paybackHigh = pickValue(['payback_high', 'payback_year']);
+      const breakEven = parseNumber(map.get('break_even_price'));
 
-      const insight2 = revenueDeltaVsMid !== null
-        ? `${scenarioLabel} lifetime revenue is ${signedPct(revenueDeltaVsMid)} versus Mid (${compactUsd(revenueScenario)} vs ${compactUsd(revenueMid)}), showing direct sensitivity to price assumptions.`
-        : `${scenarioLabel} scenario applies a different price deck while keeping issuance volumes fixed.`;
+      const downsideVsMid = revenueMid > 0 ? (revenueLow - revenueMid) / revenueMid : null;
+      const upsideVsMid = revenueMid > 0 ? (revenueHigh - revenueMid) / revenueMid : null;
 
-      const insight3 = priceHeadroom !== null
-        ? `Implied blended price is ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(blendedPrice)}/tCO2e, ${priceHeadroom >= 0 ? 'above' : 'below'} break-even by ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(Math.abs(priceHeadroom))}/tCO2e.`
-        : 'Break-even headroom updates as scenario pricing changes.';
+      let classification = 'Conditionally investable';
+      if (npvLow !== null && npvMid !== null && npvHigh !== null && npvLow < 0 && npvMid < 0 && npvHigh < 0) {
+        classification = 'Not viable';
+      } else if (npvLow !== null && npvMid !== null && npvLow < 0 && npvMid <= 0) {
+        classification = 'Marginal';
+      } else if (npvLow !== null && npvMid !== null && npvHigh !== null && npvLow > 0 && npvMid > 0 && npvHigh > 0) {
+        classification = 'Investable';
+      }
+      if (classification === 'Investable' && irrLow !== null && irrMid !== null && irrHigh !== null && irrLow >= 0.1 && irrMid >= 0.12 && irrHigh >= 0.15) {
+        classification = 'Highly attractive';
+      }
 
-      const npvDelta = npv !== null && npvMid !== null && npvMid !== 0 ? (npv - npvMid) / Math.abs(npvMid) : null;
-      const irrDelta = irr !== null && irrMid !== null ? irr - irrMid : null;
-      const insight4Parts = [];
-      if (npv !== null) insight4Parts.push(`NPV ${compactUsd(npv)}${npvDelta !== null ? ` (${signedPct(npvDelta)} vs Mid)` : ''}`);
-      if (irr !== null) insight4Parts.push(`IRR ${formatPercent(irr)}${irrDelta !== null ? ` (${irrDelta >= 0 ? '+' : ''}${(irrDelta * 100).toFixed(1)}pp vs Mid)` : ''}`);
-      if (payback !== null) insight4Parts.push(`payback year ${Math.round(payback)}`);
-      const insight4 = insight4Parts.length
-        ? `Commercial readout: ${insight4Parts.join(', ')}.`
-        : 'Commercial readout updates with the selected scenario.';
+      const indicates = [
+        breakEven !== null
+          ? `Viability threshold is ${fullUsd(breakEven)}/tCO2e, and the project becomes attractive only when realised prices stay above that level with dependable margin.`
+          : 'Viability hinges on maintaining realised prices above break-even with a clear margin, rather than relying on optimistic spot pricing.',
+        downsideVsMid !== null && upsideVsMid !== null
+          ? `Revenue sensitivity is high, with lifetime outcomes moving ${signedPct(downsideVsMid)} in Low and ${signedPct(upsideVsMid)} in High versus Mid, so price quality drives value.`
+          : 'Revenue sensitivity is material across low, mid, and high scenarios, making price realisation the core commercial lever.',
+        npvLow !== null && irrLow !== null
+          ? `Downside risk is ${npvLow > 0 ? 'manageable but still exposed' : 'material'}, with the Low case at NPV ${compactUsd(npvLow)} and IRR ${formatPercent(irrLow)}, so weak pricing can erode bankability.`
+          : 'Downside risk should be treated as the primary underwriting case before capital is committed.',
+        npvHigh !== null && irrHigh !== null
+          ? `Upside potential is strong in better pricing environments, with High case NPV ${compactUsd(npvHigh)} and IRR ${formatPercent(irrHigh)}, creating meaningful optionality.`
+          : 'Upside conditions can materially improve value, but only where stronger pricing is contracted and durable.',
+        `Strategically, this profile suits investors and buyers who can support structured pricing (for example floor-backed offtake) rather than open-market exposure.`
+      ];
 
-      setInsights([insight1, insight2, insight3, insight4]);
+      const nextSteps = [
+        `Secure downside protection first by setting a minimum contracted price above break-even before committing further development spend.`,
+        `Position commercially around price certainty and buyer quality, not headline upside, to improve financing confidence.`,
+        `De-risk execution with staged capex, tighter assumption validation, and clear go or no-go gates tied to contracted pricing and returns.`,
+        `Capture upside through optionality clauses and phased scale triggers, so higher-price benefits are monetised without depending on them.`
+      ];
+
+      if (paybackLow !== null || paybackMid !== null || paybackHigh !== null) {
+        nextSteps[2] = `${nextSteps[2]} Use payback gates (${paybackLow !== null ? Math.round(paybackLow) : 'n/a'}/${paybackMid !== null ? Math.round(paybackMid) : 'n/a'}/${paybackHigh !== null ? Math.round(paybackHigh) : 'n/a'}) to set pace of capital deployment.`;
+      }
+
+      setInsights({ classification, indicates, nextSteps });
     };
 
     const scenarioFromOutput = String(scenario || '').trim().toLowerCase();
@@ -558,14 +570,14 @@ const initExampleOutputCharts = async () => {
     if (scenarioSelect) scenarioSelect.value = initialScenario;
     updateKpiMetaLabels(initialScenario);
     renderScenario(initialScenario);
-    buildScenarioInsights(initialScenario);
+    buildScenarioInsights();
 
     if (scenarioSelect) {
       scenarioSelect.addEventListener('change', () => {
         const selected = scenarioSelect.value || 'mid';
         updateKpiMetaLabels(selected);
         renderScenario(selected);
-        buildScenarioInsights(selected);
+        buildScenarioInsights();
       });
     }
   } catch (error) {
