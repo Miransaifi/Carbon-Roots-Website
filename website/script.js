@@ -323,9 +323,9 @@ const initExampleOutputCharts = async () => {
       {
         id: 'NPV',
         byScenario: {
-          low: ['npv_p90'],
-          mid: ['npv_base', 'npv', 'project_npv'],
-          high: ['npv_p50'],
+          low: ['npv_low', 'npv_p90'],
+          mid: ['npv_mid', 'npv_base', 'npv', 'project_npv'],
+          high: ['npv_high', 'npv_p50'],
         },
         format: (v) => {
           const n = parseNumber(v);
@@ -335,9 +335,9 @@ const initExampleOutputCharts = async () => {
       {
         id: 'IRR',
         byScenario: {
-          low: ['irr_p90'],
-          mid: ['irr_base', 'irr', 'project_irr'],
-          high: ['irr_p50'],
+          low: ['irr_low', 'irr_p90'],
+          mid: ['irr_mid', 'irr_base', 'irr', 'project_irr'],
+          high: ['irr_high', 'irr_p50'],
         },
         format: (v) => {
           const n = parseNumber(v);
@@ -490,8 +490,20 @@ const initExampleOutputCharts = async () => {
       const finalCredits = parseNumber(
         scenario === 'low' ? finalRow.credits_p90 : scenario === 'high' ? finalRow.credits_p50 : finalRow.credits_base,
       );
-      const npv = parseNumber(scenario === 'low' ? map.get('npv_p90') : scenario === 'high' ? map.get('npv_p50') : map.get('npv_base'));
-      const irr = parseNumber(scenario === 'low' ? map.get('irr_p90') : scenario === 'high' ? map.get('irr_p50') : map.get('irr_base'));
+      const npv = parseNumber(
+        scenario === 'low'
+          ? (map.get('npv_low') ?? map.get('npv_p90'))
+          : scenario === 'high'
+            ? (map.get('npv_high') ?? map.get('npv_p50'))
+            : (map.get('npv_mid') ?? map.get('npv_base')),
+      );
+      const irr = parseNumber(
+        scenario === 'low'
+          ? (map.get('irr_low') ?? map.get('irr_p90'))
+          : scenario === 'high'
+            ? (map.get('irr_high') ?? map.get('irr_p50'))
+            : (map.get('irr_mid') ?? map.get('irr_base')),
+      );
       const breakEven = parseNumber(map.get('break_even_price'));
 
       if (finalRevenue === null || finalCredits === null) return;
