@@ -280,8 +280,17 @@ const initExampleOutputCharts = async () => {
 
       if (outputLines.length > 1) {
         const outputHeaders = parseCsvRow(outputLines[0]).map((h) => h.trim().toLowerCase());
-        const outputRow = parseCsvRow(outputLines[1]);
-        outputHeaders.forEach((header, i) => map.set(header, outputRow[i]));
+        const dataRows = outputLines.slice(1).map((line) => parseCsvRow(line));
+        const projectIdIdx = outputHeaders.indexOf('project_id');
+        const outputRow = dataRows.find((row) => {
+          if (!row?.length) return false;
+          if (projectIdIdx < 0) return row.some((cell) => String(cell || '').trim() !== '');
+          return String(row[projectIdIdx] || '').trim() !== '';
+        });
+
+        if (outputRow) {
+          outputHeaders.forEach((header, i) => map.set(header, outputRow[i]));
+        }
       }
     }
 
@@ -300,6 +309,15 @@ const initExampleOutputCharts = async () => {
         exampleProjectContext.textContent = `Illustrative pre-feasibility output, ${contextParts.join(' • ')}.`;
       }
     }
+
+    const updateKpiMetaLabels = (selectedScenario) => {
+      const label = selectedScenario === 'low' ? 'Low scenario' : selectedScenario === 'high' ? 'High scenario' : 'Mid scenario';
+      document.querySelectorAll('#example-kpis .kpi-card .kpi-meta').forEach((metaNode) => {
+        if (!metaNode) return;
+        if (metaNode.textContent?.toLowerCase().includes('estimate')) return;
+        metaNode.textContent = label;
+      });
+    };
 
     const kpis = [
       {
@@ -497,13 +515,23 @@ const initExampleOutputCharts = async () => {
       setInsights([insight1, insight2, insight3]);
     };
 
-    const initialScenario = scenarioSelect?.value || 'mid';
+    const scenarioFromOutput = String(scenario || '').trim().toLowerCase();
+    const normalizeScenario = (value) => {
+      if (value === 'low' || value === 'low price' || value === 'p90') return 'low';
+      if (value === 'high' || value === 'high price' || value === 'p50') return 'high';
+      return 'mid';
+    };
+
+    const initialScenario = normalizeScenario(scenarioFromOutput || scenarioSelect?.value || 'mid');
+    if (scenarioSelect) scenarioSelect.value = initialScenario;
+    updateKpiMetaLabels(initialScenario);
     renderScenario(initialScenario);
     buildScenarioInsights(initialScenario);
 
     if (scenarioSelect) {
       scenarioSelect.addEventListener('change', () => {
         const selected = scenarioSelect.value || 'mid';
+        updateKpiMetaLabels(selected);
         renderScenario(selected);
         buildScenarioInsights(selected);
       });
