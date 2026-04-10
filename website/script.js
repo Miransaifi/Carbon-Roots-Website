@@ -484,45 +484,67 @@ const initExampleOutputCharts = async () => {
       if (!finalRow) return;
 
       const scenarioLabel = scenario === 'low' ? 'Low-price' : scenario === 'high' ? 'High-price' : 'Mid-price';
-      const finalRevenue = parseNumber(
-        scenario === 'low' ? finalRow.revenue_low : scenario === 'high' ? finalRow.revenue_high : finalRow.revenue_base,
-      );
+      const revenueKey = scenario === 'low' ? 'revenue_low' : scenario === 'high' ? 'revenue_high' : 'revenue_base';
+      const finalRevenue = parseNumber(finalRow[revenueKey]);
       const finalCredits = parseNumber(finalRow.credits_base);
-      const npv = parseNumber(
-        scenario === 'low'
-          ? (map.get('npv_low') ?? map.get('npv_p90'))
-          : scenario === 'high'
-            ? (map.get('npv_high') ?? map.get('npv_p50'))
-            : (map.get('npv_mid') ?? map.get('npv_base')),
+
+      const pickScenarioValue = (lowKeys, midKeys, highKeys) => {
+        const keys = scenario === 'low' ? lowKeys : scenario === 'high' ? highKeys : midKeys;
+        const val = keys.map((k) => map.get(k)).find((v) => v !== undefined && String(v).trim() !== '');
+        return parseNumber(val);
+      };
+
+      const npv = pickScenarioValue(['npv_low', 'npv_p90'], ['npv_mid', 'npv_base'], ['npv_high', 'npv_p50']);
+      const irr = pickScenarioValue(['irr_low', 'irr_p90'], ['irr_mid', 'irr_base'], ['irr_high', 'irr_p50']);
+      const payback = pickScenarioValue(
+        ['payback_low', 'payback_year_low', 'payback_period_low', 'payback_year'],
+        ['payback_mid', 'payback_year_mid', 'payback_period_mid', 'payback_year'],
+        ['payback_high', 'payback_year_high', 'payback_period_high', 'payback_year'],
       );
-      const irr = parseNumber(
-        scenario === 'low'
-          ? (map.get('irr_low') ?? map.get('irr_p90'))
-          : scenario === 'high'
-            ? (map.get('irr_high') ?? map.get('irr_p50'))
-            : (map.get('irr_mid') ?? map.get('irr_base')),
-      );
+      const npvMid = parseNumber(map.get('npv_mid') ?? map.get('npv_base'));
+      const irrMid = parseNumber(map.get('irr_mid') ?? map.get('irr_base'));
       const breakEven = parseNumber(map.get('break_even_price'));
 
       if (finalRevenue === null || finalCredits === null) return;
 
-      const insight1 = `${scenarioLabel} trajectory reaches ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(finalRevenue)} annual revenue and ${formatCompactNumber(finalCredits)} annual credits by ${finalRow.year}.`;
+      const compactUsd = (n) => new Intl.NumberFormat('en-GB', {
+        style: 'currency',
+        currency: 'USD',
+        notation: 'compact',
+        maximumFractionDigits: 1,
+      }).format(n);
+      const signedPct = (n) => `${n >= 0 ? '+' : ''}${(n * 100).toFixed(1)}%`;
 
-      const creditDropP50 = parseNumber(map.get('credit_drop_p50'));
-      const creditDropP90 = parseNumber(map.get('credit_drop_p90'));
-      const insight2 = creditDropP50 !== null && creditDropP90 !== null
-        ? `Issuance downside remains material: ${formatPercent(creditDropP50)} at P50 and ${formatPercent(creditDropP90)} at P90 versus base.`
-        : 'Scenario keeps the same Base/P50/P90 issuance structure for downside visibility.';
+      const totalCredits = parseNumber(map.get('total_credits_base'))
+        ?? rows.reduce((sum, r) => sum + (parseNumber(r.credits_base) || 0), 0);
+      const sumRevenue = (key) => rows.reduce((sum, r) => sum + (parseNumber(r[key]) || 0), 0);
+      const revenueMid = sumRevenue('revenue_base');
+      const revenueScenario = sumRevenue(revenueKey);
+      const revenueDeltaVsMid = revenueMid > 0 ? (revenueScenario - revenueMid) / revenueMid : null;
+      const blendedPrice = totalCredits > 0 ? revenueScenario / totalCredits : null;
+      const priceHeadroom = blendedPrice !== null && breakEven !== null ? blendedPrice - breakEven : null;
 
-      const parts = [];
-      if (npv !== null) parts.push(`NPV ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(npv)}`);
-      if (irr !== null) parts.push(`IRR ${formatPercent(irr)}`);
-      if (breakEven !== null) parts.push(`break-even ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(breakEven)}/tCO2e`);
-      const insight3 = parts.length
-        ? `Commercial readout for this scenario: ${parts.join(', ')}.`
+      const insight1 = `${scenarioLabel} pathway reaches ${compactUsd(finalRevenue)} annual revenue by ${finalRow.year}, with issuance held at ${formatCompactNumber(finalCredits)} credits in-year.`;
+
+      const insight2 = revenueDeltaVsMid !== null
+        ? `${scenarioLabel} lifetime revenue is ${signedPct(revenueDeltaVsMid)} versus Mid (${compactUsd(revenueScenario)} vs ${compactUsd(revenueMid)}), showing direct sensitivity to price assumptions.`
+        : `${scenarioLabel} scenario applies a different price deck while keeping issuance volumes fixed.`;
+
+      const insight3 = priceHeadroom !== null
+        ? `Implied blended price is ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(blendedPrice)}/tCO2e, ${priceHeadroom >= 0 ? 'above' : 'below'} break-even by ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(Math.abs(priceHeadroom))}/tCO2e.`
+        : 'Break-even headroom updates as scenario pricing changes.';
+
+      const npvDelta = npv !== null && npvMid !== null && npvMid !== 0 ? (npv - npvMid) / Math.abs(npvMid) : null;
+      const irrDelta = irr !== null && irrMid !== null ? irr - irrMid : null;
+      const insight4Parts = [];
+      if (npv !== null) insight4Parts.push(`NPV ${compactUsd(npv)}${npvDelta !== null ? ` (${signedPct(npvDelta)} vs Mid)` : ''}`);
+      if (irr !== null) insight4Parts.push(`IRR ${formatPercent(irr)}${irrDelta !== null ? ` (${irrDelta >= 0 ? '+' : ''}${(irrDelta * 100).toFixed(1)}pp vs Mid)` : ''}`);
+      if (payback !== null) insight4Parts.push(`payback year ${Math.round(payback)}`);
+      const insight4 = insight4Parts.length
+        ? `Commercial readout: ${insight4Parts.join(', ')}.`
         : 'Commercial readout updates with the selected scenario.';
 
-      setInsights([insight1, insight2, insight3]);
+      setInsights([insight1, insight2, insight3, insight4]);
     };
 
     const scenarioFromOutput = String(scenario || '').trim().toLowerCase();
