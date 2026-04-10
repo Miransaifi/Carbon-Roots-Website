@@ -245,7 +245,7 @@ const initExampleOutputCharts = async () => {
   const setInsights = ({ classification, indicates, nextSteps }) => {
     if (!insightStrip || !insightList || !nextStepsList || !indicates?.length || !nextSteps?.length) return;
     if (insightClassification) {
-      insightClassification.textContent = classification ? `Project classification: ${classification}` : '';
+      insightClassification.textContent = classification || '';
     }
 
     insightList.innerHTML = '';

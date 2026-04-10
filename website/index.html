@@ -314,11 +314,21 @@
             </div>
 
             <div class="insight-strip" id="example-insights" aria-label="Example output insights" hidden>
-              <p class="insight-classification" id="insight-classification"></p>
-              <p class="insight-title">What this indicates</p>
-              <ul id="insight-list"></ul>
-              <p class="insight-title" style="margin-top:0.7rem;">Recommended next steps</p>
-              <ul id="next-steps-list"></ul>
+              <div class="decision-head">
+                <p class="insight-kicker">Decision brief</p>
+                <p class="insight-classification">Project classification: <span id="insight-classification"></span></p>
+              </div>
+
+              <div class="insight-columns">
+                <article class="insight-block">
+                  <p class="insight-title">What this indicates</p>
+                  <ul id="insight-list"></ul>
+                </article>
+                <article class="insight-block">
+                  <p class="insight-title">Recommended next steps</p>
+                  <ul id="next-steps-list"></ul>
+                </article>
+              </div>
             </div>
           </div>
         </div>
