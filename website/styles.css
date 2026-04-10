@@ -464,6 +464,13 @@ section[id] {
   padding: 0.8rem 0.9rem;
 }
 
+.insight-classification {
+  margin: 0 0 0.45rem;
+  font-size: 0.9rem;
+  color: #1f3d2b;
+  font-weight: 700;
+}
+
 .insight-title {
   margin: 0 0 0.35rem;
   font-size: 0.85rem;

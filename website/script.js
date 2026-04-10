@@ -237,17 +237,31 @@ const initExampleOutputCharts = async () => {
   const exampleProjectTitle = document.querySelector('#example-project-title');
   const exampleProjectContext = document.querySelector('#example-project-context');
   const insightStrip = document.querySelector('#example-insights');
+  const insightClassification = document.querySelector('#insight-classification');
   const insightList = document.querySelector('#insight-list');
+  const nextStepsList = document.querySelector('#next-steps-list');
   const scenarioSelect = document.querySelector('#scenario-select');
 
-  const setInsights = (items) => {
-    if (!insightStrip || !insightList || !items?.length) return;
+  const setInsights = ({ classification, indicates, nextSteps }) => {
+    if (!insightStrip || !insightList || !nextStepsList || !indicates?.length || !nextSteps?.length) return;
+    if (insightClassification) {
+      insightClassification.textContent = classification ? `Project classification: ${classification}` : '';
+    }
+
     insightList.innerHTML = '';
-    items.forEach((text) => {
+    indicates.forEach((text) => {
       const li = document.createElement('li');
       li.textContent = text;
       insightList.appendChild(li);
     });
+
+    nextStepsList.innerHTML = '';
+    nextSteps.forEach((text) => {
+      const li = document.createElement('li');
+      li.textContent = text;
+      nextStepsList.appendChild(li);
+    });
+
     insightStrip.hidden = false;
   };
 
@@ -480,11 +494,9 @@ const initExampleOutputCharts = async () => {
     };
 
     const buildScenarioInsights = () => {
-      const finalRow = rows[rows.length - 1];
-      if (!finalRow) return;
-
       const pickValue = (keys) => parseNumber(keys.map((k) => map.get(k)).find((v) => v !== undefined && String(v).trim() !== ''));
       const compactUsd = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 }).format(n);
+      const fullUsd = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n);
       const signedPct = (n) => `${n >= 0 ? '+' : ''}${(n * 100).toFixed(1)}%`;
 
       const revenueLow = rows.reduce((sum, r) => sum + (parseNumber(r.revenue_low) || 0), 0);
@@ -501,38 +513,50 @@ const initExampleOutputCharts = async () => {
       const paybackMid = pickValue(['payback_mid', 'payback_year']);
       const paybackHigh = pickValue(['payback_high', 'payback_year']);
       const breakEven = parseNumber(map.get('break_even_price'));
-      const totalCredits = parseNumber(map.get('total_credits_base')) ?? rows.reduce((sum, r) => sum + (parseNumber(r.credits_base) || 0), 0);
 
-      const blendedMid = totalCredits > 0 ? revenueMid / totalCredits : null;
-      const headroomMid = blendedMid !== null && breakEven !== null ? blendedMid - breakEven : null;
       const downsideVsMid = revenueMid > 0 ? (revenueLow - revenueMid) / revenueMid : null;
       const upsideVsMid = revenueMid > 0 ? (revenueHigh - revenueMid) / revenueMid : null;
 
-      const insight1 = breakEven !== null
-        ? `Viability threshold sits at ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(breakEven)}/tCO2e; the project is most attractive where realised prices stay above that level with margin.`
-        : 'Viability is anchored to break-even price discipline, with attractiveness improving only when realised prices clear the cost threshold.';
+      let classification = 'Conditionally investable';
+      if (npvLow !== null && npvMid !== null && npvHigh !== null && npvLow < 0 && npvMid < 0 && npvHigh < 0) {
+        classification = 'Not viable';
+      } else if (npvLow !== null && npvMid !== null && npvLow < 0 && npvMid <= 0) {
+        classification = 'Marginal';
+      } else if (npvLow !== null && npvMid !== null && npvHigh !== null && npvLow > 0 && npvMid > 0 && npvHigh > 0) {
+        classification = 'Investable';
+      }
+      if (classification === 'Investable' && irrLow !== null && irrMid !== null && irrHigh !== null && irrLow >= 0.1 && irrMid >= 0.12 && irrHigh >= 0.15) {
+        classification = 'Highly attractive';
+      }
 
-      const insight2 = downsideVsMid !== null && upsideVsMid !== null
-        ? `Price sensitivity is material: lifetime revenue shifts ${signedPct(downsideVsMid)} in Low and ${signedPct(upsideVsMid)} in High versus Mid.`
-        : 'Price sensitivity remains the dominant driver of commercial outcomes across low, mid, and high scenarios.';
+      const indicates = [
+        breakEven !== null
+          ? `Viability threshold is ${fullUsd(breakEven)}/tCO2e, and the project becomes attractive only when realised prices stay above that level with dependable margin.`
+          : 'Viability hinges on maintaining realised prices above break-even with a clear margin, rather than relying on optimistic spot pricing.',
+        downsideVsMid !== null && upsideVsMid !== null
+          ? `Revenue sensitivity is high, with lifetime outcomes moving ${signedPct(downsideVsMid)} in Low and ${signedPct(upsideVsMid)} in High versus Mid, so price quality drives value.`
+          : 'Revenue sensitivity is material across low, mid, and high scenarios, making price realisation the core commercial lever.',
+        npvLow !== null && irrLow !== null
+          ? `Downside risk is ${npvLow > 0 ? 'manageable but still exposed' : 'material'}, with the Low case at NPV ${compactUsd(npvLow)} and IRR ${formatPercent(irrLow)}, so weak pricing can erode bankability.`
+          : 'Downside risk should be treated as the primary underwriting case before capital is committed.',
+        npvHigh !== null && irrHigh !== null
+          ? `Upside potential is strong in better pricing environments, with High case NPV ${compactUsd(npvHigh)} and IRR ${formatPercent(irrHigh)}, creating meaningful optionality.`
+          : 'Upside conditions can materially improve value, but only where stronger pricing is contracted and durable.',
+        `Strategically, this profile suits investors and buyers who can support structured pricing (for example floor-backed offtake) rather than open-market exposure.`
+      ];
 
-      const insight3 = npvLow !== null && irrLow !== null
-        ? `Downside case is ${npvLow > 0 ? 'still viable' : 'marginal to non-viable'} with NPV ${compactUsd(npvLow)} and IRR ${formatPercent(irrLow)}, so downside risk needs explicit protection in structuring.`
-        : 'Downside case should be treated as the key risk test for viability before committing development capital.';
+      const nextSteps = [
+        `Secure downside protection first by setting a minimum contracted price above break-even before committing further development spend.`,
+        `Position commercially around price certainty and buyer quality, not headline upside, to improve financing confidence.`,
+        `De-risk execution with staged capex, tighter assumption validation, and clear go or no-go gates tied to contracted pricing and returns.`,
+        `Capture upside through optionality clauses and phased scale triggers, so higher-price benefits are monetised without depending on them.`
+      ];
 
-      const insight4 = npvHigh !== null && irrHigh !== null
-        ? `Upside case shows strong value capture, with NPV ${compactUsd(npvHigh)} and IRR ${formatPercent(irrHigh)}, indicating meaningful optionality in stronger price environments.`
-        : 'Upside conditions improve returns materially when higher pricing can be contracted or sustained.';
+      if (paybackLow !== null || paybackMid !== null || paybackHigh !== null) {
+        nextSteps[2] = `${nextSteps[2]} Use payback gates (${paybackLow !== null ? Math.round(paybackLow) : 'n/a'}/${paybackMid !== null ? Math.round(paybackMid) : 'n/a'}/${paybackHigh !== null ? Math.round(paybackHigh) : 'n/a'}) to set pace of capital deployment.`;
+      }
 
-      const paybackText = [paybackLow, paybackMid, paybackHigh].some((v) => v !== null)
-        ? `Payback profile (L/M/H): ${paybackLow !== null ? Math.round(paybackLow) : 'n/a'} / ${paybackMid !== null ? Math.round(paybackMid) : 'n/a'} / ${paybackHigh !== null ? Math.round(paybackHigh) : 'n/a'}`
-        : null;
-      const headroomText = headroomMid !== null
-        ? `Mid-case blended price is ${headroomMid >= 0 ? 'above' : 'below'} break-even by ${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(Math.abs(headroomMid))}/tCO2e`
-        : null;
-      const insight5 = `Strategic implication: this fits investors and buyers who can underwrite price certainty (for example floor-price offtake or premium channels). ${[headroomText, paybackText].filter(Boolean).join('; ')}.`;
-
-      setInsights([insight1, insight2, insight3, insight4, insight5]);
+      setInsights({ classification, indicates, nextSteps });
     };
 
     const scenarioFromOutput = String(scenario || '').trim().toLowerCase();
