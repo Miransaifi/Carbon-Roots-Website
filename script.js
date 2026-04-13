@@ -28,6 +28,24 @@ if (yearNode) {
   yearNode.textContent = new Date().getFullYear();
 }
 
+const insightToggles = Array.from(document.querySelectorAll('[data-insight-toggle]'));
+if (insightToggles.length) {
+  insightToggles.forEach((toggle) => {
+    const button = toggle.querySelector('.insight-toggle-btn');
+    const content = toggle.querySelector('.insight-content');
+    const icon = toggle.querySelector('.insight-toggle-icon');
+    if (!button || !content || !icon) return;
+
+    button.addEventListener('click', () => {
+      const isOpen = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', String(!isOpen));
+      content.hidden = isOpen;
+      toggle.classList.toggle('is-open', !isOpen);
+      icon.textContent = isOpen ? '+' : '−';
+    });
+  });
+}
+
 const engineTrack = document.querySelector('#engine-track');
 const enginePrev = document.querySelector('#engine-prev');
 const engineNext = document.querySelector('#engine-next');
@@ -317,7 +335,6 @@ const initExampleOutputCharts = async () => {
     if (exampleProjectContext) {
       const contextParts = [
         country && String(country).trim(),
-        scenario && String(scenario).trim() ? `${String(scenario).trim()} scenario` : null,
       ].filter(Boolean);
       if (contextParts.length) {
         exampleProjectContext.textContent = `Illustrative pre-feasibility output, ${contextParts.join(' • ')}.`;
@@ -531,25 +548,25 @@ const initExampleOutputCharts = async () => {
 
       const indicates = [
         breakEven !== null
-          ? `Viability threshold is ${fullUsd(breakEven)}/tCO2e, and the project becomes attractive only when realised prices stay above that level with dependable margin.`
-          : 'Viability hinges on maintaining realised prices above break-even with a clear margin, rather than relying on optimistic spot pricing.',
+          ? `The project starts to work at about ${fullUsd(breakEven)}/tCO2e. It becomes attractive when carbon prices stay above that level, not just for a short period.`
+          : 'The project works only if carbon prices stay clearly above break-even for a sustained period.',
         downsideVsMid !== null && upsideVsMid !== null
-          ? `Revenue sensitivity is high, with lifetime outcomes moving ${signedPct(downsideVsMid)} in Low and ${signedPct(upsideVsMid)} in High versus Mid, so price quality drives value.`
-          : 'Revenue sensitivity is material across low, mid, and high scenarios, making price realisation the core commercial lever.',
+          ? `Results are very sensitive to price: compared with Mid, total revenue is ${signedPct(downsideVsMid)} in Low and ${signedPct(upsideVsMid)} in High.`
+          : 'Results are highly price-sensitive across Low, Mid, and High scenarios.',
         npvLow !== null && irrLow !== null
-          ? `Downside risk is ${npvLow > 0 ? 'manageable but still exposed' : 'material'}, with the Low case at NPV ${compactUsd(npvLow)} and IRR ${formatPercent(irrLow)}, so weak pricing can erode bankability.`
-          : 'Downside risk should be treated as the primary underwriting case before capital is committed.',
+          ? `In the Low scenario, risk is ${npvLow > 0 ? 'still present' : 'high'}: NPV is ${compactUsd(npvLow)} and IRR is ${formatPercent(irrLow)}. This means weak prices can quickly make the project hard to fund.`
+          : 'The Low scenario should be treated as the main risk test before committing capital.',
         npvHigh !== null && irrHigh !== null
-          ? `Upside potential is strong in better pricing environments, with High case NPV ${compactUsd(npvHigh)} and IRR ${formatPercent(irrHigh)}, creating meaningful optionality.`
-          : 'Upside conditions can materially improve value, but only where stronger pricing is contracted and durable.',
-        `Strategically, this profile suits investors and buyers who can support structured pricing (for example floor-backed offtake) rather than open-market exposure.`
+          ? `In the High scenario, returns are much stronger (NPV ${compactUsd(npvHigh)}, IRR ${formatPercent(irrHigh)}), showing good upside when stronger prices are achieved.`
+          : 'There is meaningful upside if stronger prices can be secured.',
+        `This project is best suited to investors and buyers who can agree price protection (for example, a floor-price offtake), not buyers relying on open-market prices.`
       ];
 
       const nextSteps = [
-        `Secure downside protection first by setting a minimum contracted price above break-even before committing further development spend.`,
-        `Position commercially around price certainty and buyer quality, not headline upside, to improve financing confidence.`,
-        `De-risk execution with staged capex, tighter assumption validation, and clear go or no-go gates tied to contracted pricing and returns.`,
-        `Capture upside through optionality clauses and phased scale triggers, so higher-price benefits are monetised without depending on them.`
+        `Secure downside protection first: agree a minimum contracted carbon price above break-even before investing further.`,
+        `Lead with a pricing strategy, not a volume story. Focus on buyers willing to pay for quality and long-term delivery confidence.`,
+        `Reduce execution risk with phased spending, tighter assumptions, and clear go/no-go checkpoints tied to contracted price and returns.`,
+        `Keep upside optional: structure contracts so you can benefit from higher prices, but do not rely on them in the base case.`
       ];
 
       if (paybackLow !== null || paybackMid !== null || paybackHigh !== null) {
