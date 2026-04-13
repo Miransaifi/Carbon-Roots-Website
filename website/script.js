@@ -30,20 +30,29 @@ if (yearNode) {
 
 const insightToggles = Array.from(document.querySelectorAll('[data-insight-toggle]'));
 if (insightToggles.length) {
-  insightToggles.forEach((toggle) => {
-    const button = toggle.querySelector('.insight-toggle-btn');
-    const content = toggle.querySelector('.insight-content');
-    const icon = toggle.querySelector('.insight-toggle-icon');
+  const setInsightToggleState = (toggle, isOpen) => {
+    const button = toggle.querySelector(':scope > .insight-toggle-btn');
+    const content = toggle.querySelector(':scope > .insight-content');
+    const icon = toggle.querySelector(':scope > .insight-toggle-btn .insight-toggle-icon');
     if (!button || !content || !icon) return;
+
+    button.setAttribute('aria-expanded', String(isOpen));
+    content.hidden = !isOpen;
+    toggle.classList.toggle('is-open', isOpen);
+    icon.textContent = isOpen ? '−' : '+';
+  };
+
+  insightToggles.forEach((toggle) => {
+    const button = toggle.querySelector(':scope > .insight-toggle-btn');
+    if (!button) return;
+
+    setInsightToggleState(toggle, false);
 
     button.addEventListener('click', (event) => {
       event.preventDefault();
       event.stopPropagation();
       const isOpen = button.getAttribute('aria-expanded') === 'true';
-      button.setAttribute('aria-expanded', String(!isOpen));
-      content.hidden = isOpen;
-      toggle.classList.toggle('is-open', !isOpen);
-      icon.textContent = isOpen ? '+' : '−';
+      setInsightToggleState(toggle, !isOpen);
     });
   });
 }
