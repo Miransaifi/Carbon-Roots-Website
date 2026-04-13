@@ -420,6 +420,23 @@
 
       <section id="intake" class="section">
         <div class="container">
+          <form name="project-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field" hidden>
+            <input type="hidden" name="form-name" value="project-intake" />
+            <input type="text" name="bot-field" />
+            <input type="text" name="requested_service" />
+            <input type="text" name="requested_service_select" />
+            <input type="text" name="full_name" />
+            <input type="email" name="email" />
+            <input type="text" name="country_region" />
+            <input type="number" name="land_area_ha" />
+            <input type="text" name="land_type" />
+            <input type="text" name="land_type_other" />
+            <input type="text" name="project_concept" />
+            <input type="text" name="timeline" />
+            <input type="text" name="species_intentions" />
+            <textarea name="notes"></textarea>
+          </form>
+
           <p class="eyebrow">Project intake</p>
           <h2>Share the key inputs needed to run the Carbon Roots engine.</h2>
           <p class="intake-offer-note" id="intake-offer-note" hidden></p>
