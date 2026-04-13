@@ -2,11 +2,9 @@ const menuButton = document.querySelector('.menu-toggle');
 const mainNav = document.querySelector('#main-nav');
 
 window.addEventListener('pageshow', () => {
-  if (window.location.hash) {
-    const cleanUrl = `${window.location.pathname}${window.location.search}`;
-    window.history.replaceState(null, '', cleanUrl);
+  if (!window.location.hash) {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }
-  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
 });
 
 if (menuButton && mainNav) {
