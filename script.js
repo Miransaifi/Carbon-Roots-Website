@@ -36,7 +36,9 @@ if (insightToggles.length) {
     const icon = toggle.querySelector('.insight-toggle-icon');
     if (!button || !content || !icon) return;
 
-    button.addEventListener('click', () => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       const isOpen = button.getAttribute('aria-expanded') === 'true';
       button.setAttribute('aria-expanded', String(!isOpen));
       content.hidden = isOpen;
@@ -614,8 +616,22 @@ if (intakeForm) {
   const landTypeSelect = intakeForm.querySelector('#land-type');
   const landTypeOtherWrap = intakeForm.querySelector('#land-type-other-wrap');
   const landTypeOther = intakeForm.querySelector('#land-type-other');
+  const requestedServiceInput = document.querySelector('#requested-service');
+  const intakeOfferNote = document.querySelector('#intake-offer-note');
+  const intakeOfferLinks = Array.from(document.querySelectorAll('[data-intake-offer]'));
   let landTypeTouched = false;
   let currentStep = 0;
+
+  const setRequestedService = (service) => {
+    const selectedService = service && String(service).trim() ? String(service).trim() : 'Full pre-feasibility review';
+    if (requestedServiceInput) {
+      requestedServiceInput.value = selectedService;
+    }
+    if (intakeOfferNote) {
+      intakeOfferNote.textContent = `Selected request: ${selectedService}`;
+      intakeOfferNote.hidden = false;
+    }
+  };
 
   const updateLandTypeOther = () => {
     if (!landTypeSelect || !landTypeOtherWrap || !landTypeOther) return;
@@ -681,12 +697,21 @@ if (intakeForm) {
     });
   }
 
+  if (intakeOfferLinks.length) {
+    intakeOfferLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        setRequestedService(link.getAttribute('data-intake-offer'));
+      });
+    });
+  }
+
   intakeForm.addEventListener('submit', (event) => {
     if (!validateCurrentStep()) {
       event.preventDefault();
     }
   });
 
+  setRequestedService(requestedServiceInput?.value || 'Full pre-feasibility review');
   updateLandTypeOther();
   updateStep();
 }
