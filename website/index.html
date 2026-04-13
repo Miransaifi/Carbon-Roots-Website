@@ -423,7 +423,13 @@
           <p class="eyebrow">Project intake</p>
           <h2>Share the key inputs needed to run the Carbon Roots engine.</h2>
           <p class="intake-offer-note" id="intake-offer-note" hidden></p>
-          <form id="intake-form" class="intake-form intake-wizard" action="mailto:miransaifi@carbonroots.earth" method="post" enctype="text/plain">
+          <form id="intake-form" class="intake-form intake-wizard" name="project-intake" method="post" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="project-intake" />
+            <p hidden>
+              <label>
+                Don’t fill this out if you're human: <input name="bot-field" />
+              </label>
+            </p>
             <input type="hidden" name="requested_service" id="requested-service" value="Full pre-feasibility review" />
             <p class="wizard-progress" id="wizard-progress">Step 1 of 10</p>
 
