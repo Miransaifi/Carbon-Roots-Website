@@ -431,16 +431,29 @@
             <input type="number" name="land_area_ha" />
             <input type="text" name="land_type" />
             <input type="text" name="land_type_other" />
-            <input type="text" name="project_concept" />
+            <input type="text" name="project_type" />
+            <input type="text" name="current_land_use" />
+            <input type="text" name="current_land_use_other" />
+            <input type="number" name="implementation_start_year" />
             <input type="text" name="timeline" />
+            <input type="text" name="crediting_period" />
+            <input type="text" name="implementation_approach" />
             <input type="text" name="species_intentions" />
+            <input type="text" name="expected_survival_rate" />
+            <input type="text" name="establishment_cost_range" />
+            <input type="text" name="maintenance_cost_range" />
+            <input type="text" name="carbon_price_range" />
+            <input type="text" name="land_tenure_status" />
             <textarea name="notes"></textarea>
           </form>
 
           <p class="eyebrow">Project intake</p>
           <h2>Share the key inputs needed to run the Carbon Roots engine.</h2>
+          <p class="intake-helper">
+            This is a quick project intake. You do not need exact data, approximate inputs are sufficient for early-stage feasibility.
+          </p>
           <p class="intake-offer-note" id="intake-offer-note" hidden></p>
-          <form id="intake-form" class="intake-form intake-wizard" name="project-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field">
+          <form id="intake-form" class="intake-form" name="project-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field">
             <input type="hidden" name="form-name" value="project-intake" />
             <p hidden>
               <label>
@@ -448,110 +461,187 @@
               </label>
             </p>
             <input type="hidden" name="requested_service" id="requested-service" value="Full pre-feasibility review" />
-            <p class="wizard-progress" id="wizard-progress">Step 1 of 10</p>
 
-            <div class="form-step is-active" data-step="1">
-              <label>
-                What would you like to request?
-                <select name="requested_service_select" id="requested-service-select" required>
-                  <option value="Full pre-feasibility review" selected>Full pre-feasibility review</option>
-                  <option value="Free project snapshot">Free project snapshot</option>
-                </select>
-              </label>
+            <div class="form-section">
+              <p class="form-section-kicker">Section 1</p>
+              <h3>Basic project info</h3>
+              <div class="form-grid">
+                <label>
+                  What would you like to request?
+                  <select name="requested_service_select" id="requested-service-select" required>
+                    <option value="Full pre-feasibility review" selected>Full pre-feasibility review</option>
+                    <option value="Free project snapshot">Free project snapshot</option>
+                  </select>
+                </label>
+                <label>
+                  Full name
+                  <input type="text" name="full_name" placeholder="Your name" required />
+                </label>
+                <label>
+                  Email
+                  <input type="email" name="email" placeholder="you@example.com" required />
+                </label>
+                <label>
+                  Country / region
+                  <input type="text" name="country_region" placeholder="e.g. Kenya, Rift Valley" required />
+                </label>
+                <label>
+                  Land area (ha)
+                  <input type="number" name="land_area_ha" placeholder="e.g. 1250" min="0" step="0.1" required />
+                </label>
+                <label>
+                  Land type
+                  <select name="land_type" id="land-type" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Degraded grassland</option>
+                    <option>Degraded cropland</option>
+                    <option>Degraded forest land</option>
+                    <option>Pasture / grazing land</option>
+                    <option>Shrubland / bushland</option>
+                    <option>Bare / eroded land</option>
+                    <option>Mixed agricultural mosaic</option>
+                    <option>Riparian corridor / buffer land</option>
+                    <option>Community / smallholder mixed-use land</option>
+                    <option>Other (specify)</option>
+                  </select>
+                </label>
+                <label id="land-type-other-wrap" hidden>
+                  Please specify land type
+                  <input type="text" name="land_type_other" id="land-type-other" placeholder="Approximate description is fine" />
+                </label>
+                <label>
+                  Project type
+                  <select name="project_type" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Afforestation / Reforestation (ARR)</option>
+                    <option>Agroforestry</option>
+                    <option>Assisted Natural Regeneration (ANR)</option>
+                    <option>Mixed / Unsure</option>
+                  </select>
+                </label>
+                <label>
+                  Target first issuance year
+                  <input type="number" name="timeline" placeholder="e.g. 2030" min="2025" step="1" required />
+                </label>
+              </div>
             </div>
 
-            <div class="form-step" data-step="2" hidden>
-              <label>
-                Full name
-                <input type="text" name="full_name" placeholder="Your name" required />
-              </label>
+            <div class="form-section">
+              <p class="form-section-kicker">Section 2</p>
+              <h3>Project setup and timeline</h3>
+              <div class="form-grid">
+                <label>
+                  Current land use
+                  <select name="current_land_use" id="current-land-use" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Degraded / bare land</option>
+                    <option>Grazing land</option>
+                    <option>Cropland</option>
+                    <option>Mixed</option>
+                    <option>Other</option>
+                  </select>
+                </label>
+                <label id="current-land-use-other-wrap" hidden>
+                  Please specify current land use
+                  <input type="text" name="current_land_use_other" id="current-land-use-other" placeholder="Approximate description is fine" />
+                </label>
+                <label>
+                  Planting / implementation start year
+                  <input type="number" name="implementation_start_year" placeholder="e.g. 2026" min="2025" step="1" required />
+                </label>
+                <label>
+                  Crediting period
+                  <select name="crediting_period" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>20 years</option>
+                    <option>30 years</option>
+                    <option>40 years</option>
+                    <option>Unsure</option>
+                  </select>
+                </label>
+                <label>
+                  Implementation approach
+                  <select name="implementation_approach">
+                    <option value="" selected disabled>Select one</option>
+                    <option>All at once</option>
+                    <option>Phased over time</option>
+                    <option>Unsure</option>
+                  </select>
+                </label>
+                <label>
+                  Do you have a species or system in mind?
+                  <input type="text" name="species_intentions" placeholder="Optional" />
+                </label>
+                <label>
+                  Expected survival rate
+                  <select name="expected_survival_rate">
+                    <option value="" selected disabled>Select one</option>
+                    <option>&lt;60%</option>
+                    <option>60–80%</option>
+                    <option>80–95%</option>
+                    <option>Unsure</option>
+                  </select>
+                </label>
+              </div>
             </div>
 
-            <div class="form-step" data-step="3" hidden>
-              <label>
-                Email
-                <input type="email" name="email" placeholder="you@example.com" required />
-              </label>
-            </div>
-
-            <div class="form-step" data-step="4" hidden>
-              <label>
-                Country / region
-                <input type="text" name="country_region" placeholder="e.g. Kenya, Rift Valley" required />
-              </label>
-            </div>
-
-            <div class="form-step" data-step="5" hidden>
-              <label>
-                Total land area (hectares)
-                <input type="number" name="land_area_ha" placeholder="e.g. 1250" min="0" step="0.1" required />
-              </label>
-            </div>
-
-            <div class="form-step" data-step="6" hidden>
-              <label>
-                Land type
-                <select name="land_type" id="land-type" required>
-                  <option value="" selected disabled>Select one</option>
-                  <option>Degraded grassland</option>
-                  <option>Degraded cropland</option>
-                  <option>Degraded forest land</option>
-                  <option>Pasture / grazing land</option>
-                  <option>Shrubland / bushland</option>
-                  <option>Bare / eroded land</option>
-                  <option>Mixed agricultural mosaic</option>
-                  <option>Riparian corridor / buffer land</option>
-                  <option>Community / smallholder mixed-use land</option>
-                  <option>Other (specify)</option>
-                </select>
-              </label>
-              <label id="land-type-other-wrap" hidden>
-                Please specify land type
-                <input type="text" name="land_type_other" id="land-type-other" placeholder="Describe land type" />
-              </label>
-            </div>
-
-            <div class="form-step" data-step="7" hidden>
-              <label>
-                Project concept
-                <select name="project_concept" required>
-                  <option value="" selected disabled>Select one</option>
-                  <option>Native forest restoration</option>
-                  <option>Mixed-species reforestation</option>
-                  <option>Agroforestry</option>
-                  <option>Assisted natural regeneration (ANR)</option>
-                  <option>Riparian restoration / shelterbelts</option>
-                  <option>Silvopasture</option>
-                  <option>Woodlot / plantation (commercial species)</option>
-                </select>
-              </label>
-            </div>
-
-            <div class="form-step" data-step="8" hidden>
-              <label>
-                Timeline expectations
-                <input type="text" name="timeline" placeholder="e.g. first issuance target / implementation window" required />
-              </label>
-            </div>
-
-            <div class="form-step" data-step="9" hidden>
-              <label>
-                Species intentions (optional)
-                <input type="text" name="species_intentions" placeholder="If known" />
-              </label>
-            </div>
-
-            <div class="form-step" data-step="10" hidden>
-              <label>
-                Notes, assumptions, or existing studies (optional)
-                <textarea name="notes" rows="5" placeholder="Add any available boundaries, prior studies, land-use context, or implementation assumptions."></textarea>
-              </label>
+            <div class="form-section">
+              <p class="form-section-kicker">Section 3</p>
+              <h3>Costs and commercial assumptions</h3>
+              <p class="form-section-note">Approximate values are fine. Select “Unsure” if unknown.</p>
+              <div class="form-grid">
+                <label>
+                  Estimated establishment cost per hectare
+                  <select name="establishment_cost_range">
+                    <option value="" selected disabled>Select one</option>
+                    <option>&lt;$500</option>
+                    <option>$500–$1,500</option>
+                    <option>$1,500–$3,000</option>
+                    <option>&gt;$3,000</option>
+                    <option>Unsure</option>
+                  </select>
+                </label>
+                <label>
+                  Estimated annual maintenance cost per hectare
+                  <select name="maintenance_cost_range">
+                    <option value="" selected disabled>Select one</option>
+                    <option>&lt;$50</option>
+                    <option>$50–$150</option>
+                    <option>$150–$300</option>
+                    <option>&gt;$300</option>
+                    <option>Unsure</option>
+                  </select>
+                </label>
+                <label>
+                  Expected carbon price or target buyer
+                  <select name="carbon_price_range">
+                    <option value="" selected disabled>Select one</option>
+                    <option>&lt;$10/tCO2e</option>
+                    <option>$10–$20/tCO2e</option>
+                    <option>$20–$40/tCO2e</option>
+                    <option>$40+/tCO2e</option>
+                    <option>Unsure</option>
+                  </select>
+                </label>
+                <label>
+                  Land tenure status
+                  <select name="land_tenure_status">
+                    <option value="" selected disabled>Select one</option>
+                    <option>Secure ownership</option>
+                    <option>Lease agreement</option>
+                    <option>Community / shared land</option>
+                    <option>Unclear</option>
+                  </select>
+                </label>
+                <label class="form-span-2">
+                  Notes
+                  <textarea name="notes" rows="5" placeholder="Add any available assumptions, studies, boundaries, or relevant context."></textarea>
+                </label>
+              </div>
             </div>
 
             <div class="wizard-actions">
-              <button type="button" class="btn btn-ghost" id="wizard-back" hidden>Back</button>
-              <button type="button" class="btn" id="wizard-next">Next</button>
-              <button type="submit" class="btn" id="wizard-submit" hidden>Send intake details</button>
+              <button type="submit" class="btn">Submit project intake</button>
             </div>
 
             <div class="intake-actions">
