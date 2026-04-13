@@ -31,7 +31,7 @@
           <a href="#services">Services</a>
           <a href="#outputs">Outputs</a>
           <a href="#credibility">Credibility</a>
-          <a href="#intake" class="btn btn-sm">Request a review</a>
+          <a href="#intake" class="btn btn-sm">Request a Project Snapshot</a>
         </nav>
       </div>
     </header>
@@ -49,8 +49,7 @@
               cost.
             </p>
             <div class="hero-cta">
-              <a href="#intake" class="btn" data-intake-offer="Full pre-feasibility review">Request a pre-feasibility review</a>
-              <a href="#intake" class="btn btn-ghost" data-intake-offer="Free project snapshot">Request a free project snapshot</a>
+              <a href="#intake" class="btn">Request a Project Snapshot</a>
               <a href="#example-output-anchor" class="btn btn-ghost">See example output</a>
             </div>
           </div>
@@ -280,7 +279,7 @@
                 <p>
                   This is a light screening tool, not a substitute for the full pre-feasibility review, detailed modelling, or investment advice.
                 </p>
-                <a href="#intake" class="btn" data-intake-offer="Free project snapshot">Request your free snapshot</a>
+                <a href="#intake" class="btn">Request a Project Snapshot</a>
               </div>
             </div>
           </div>
@@ -411,7 +410,7 @@
             </p>
           </div>
           <div class="contact-actions">
-            <a href="mailto:hello@carbonroots.co?subject=Pre-feasibility%20review" class="btn">Request a pre-feasibility review</a>
+            <a href="#intake" class="btn">Request a Project Snapshot</a>
             <a href="#example-output" class="btn btn-ghost">See example output</a>
             <a href="mailto:miransaifi@carbonroots.earth?subject=Discuss%20ARR%20project" class="btn btn-ghost">Discuss your project</a>
           </div>
@@ -477,75 +476,96 @@
             <div class="form-section">
               <h3>Required Inputs</h3>
               <p class="form-section-note">These are the minimum inputs needed to run the model.</p>
-              <div class="form-grid">
-                <label>
-                  Project Type *
-                  <select name="project_type" required>
-                    <option value="" selected disabled>Select one</option>
-                    <option>Afforestation / Reforestation (ARR)</option>
-                    <option>Agroforestry</option>
-                    <option>Assisted Natural Regeneration (ANR)</option>
-                    <option>Mixed / Unsure</option>
-                  </select>
-                </label>
-                <label>
-                  Country / Region *
-                  <input type="text" name="country_region" placeholder="e.g. Kenya, Rift Valley" required />
-                </label>
-                <label>
-                  Land Area (ha) *
-                  <input type="number" name="land_area_ha" placeholder="e.g. 1250" min="0" step="0.1" required />
-                </label>
-                <label>
-                  Current Land Use *
-                  <select name="current_land_use" id="current-land-use" required>
-                    <option value="" selected disabled>Select one</option>
-                    <option>Degraded / bare land</option>
-                    <option>Grazing land</option>
-                    <option>Cropland</option>
-                    <option>Mixed</option>
-                    <option>Other</option>
-                  </select>
-                </label>
-                <label id="current-land-use-other-wrap" hidden>
-                  Please specify current land use
-                  <input type="text" name="current_land_use_other" id="current-land-use-other" placeholder="Approximate description is fine" />
-                </label>
-                <label>
-                  Planting / Implementation Start Year *
-                  <input type="number" name="implementation_start_year" placeholder="e.g. 2026" min="2025" step="1" required />
-                </label>
-                <label>
-                  Crediting Period *
-                  <select name="crediting_period" required>
-                    <option value="" selected disabled>Select one</option>
-                    <option>20 years</option>
-                    <option>30 years</option>
-                    <option>40 years</option>
-                    <option>Unsure</option>
-                  </select>
-                </label>
-                <label>
-                  Expected Carbon Price *
-                  <select name="carbon_price_range" required>
-                    <option value="" selected disabled>Select one</option>
-                    <option>&lt;$10/tCO2e</option>
-                    <option>$10–$20/tCO2e</option>
-                    <option>$20–$40/tCO2e</option>
-                    <option>$40+/tCO2e</option>
-                    <option>Unsure (conservative default applied)</option>
-                  </select>
-                </label>
-                <label>
-                  Land Tenure Status *
-                  <select name="land_tenure_status" required>
-                    <option value="" selected disabled>Select one</option>
-                    <option>Secure ownership</option>
-                    <option>Lease agreement</option>
-                    <option>Community / shared land</option>
-                    <option>Unclear</option>
-                  </select>
-                </label>
+              <p class="required-progress" id="required-progress">Step 1 of 8</p>
+              <div class="required-sequence">
+                <div class="required-step is-active" data-required-step="1">
+                  <label>
+                    Project Type *
+                    <select name="project_type" required>
+                      <option value="" selected disabled>Select one</option>
+                      <option>Afforestation / Reforestation (ARR)</option>
+                      <option>Agroforestry</option>
+                      <option>Assisted Natural Regeneration (ANR)</option>
+                      <option>Mixed / Unsure</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="required-step" data-required-step="2" hidden>
+                  <label>
+                    Country / Region *
+                    <input type="text" name="country_region" placeholder="e.g. Kenya, Rift Valley" required />
+                  </label>
+                </div>
+                <div class="required-step" data-required-step="3" hidden>
+                  <label>
+                    Land Area (ha) *
+                    <input type="number" name="land_area_ha" placeholder="e.g. 1250" min="0" step="0.1" required />
+                  </label>
+                </div>
+                <div class="required-step" data-required-step="4" hidden>
+                  <label>
+                    Current Land Use *
+                    <select name="current_land_use" id="current-land-use" required>
+                      <option value="" selected disabled>Select one</option>
+                      <option>Degraded / bare land</option>
+                      <option>Grazing land</option>
+                      <option>Cropland</option>
+                      <option>Mixed</option>
+                      <option>Other</option>
+                    </select>
+                  </label>
+                  <label id="current-land-use-other-wrap" hidden>
+                    Please specify current land use
+                    <input type="text" name="current_land_use_other" id="current-land-use-other" placeholder="Approximate description is fine" />
+                  </label>
+                </div>
+                <div class="required-step" data-required-step="5" hidden>
+                  <label>
+                    Planting / Implementation Start Year *
+                    <input type="number" name="implementation_start_year" placeholder="e.g. 2026" min="2025" step="1" required />
+                  </label>
+                </div>
+                <div class="required-step" data-required-step="6" hidden>
+                  <label>
+                    Crediting Period *
+                    <select name="crediting_period" required>
+                      <option value="" selected disabled>Select one</option>
+                      <option>20 years</option>
+                      <option>30 years</option>
+                      <option>40 years</option>
+                      <option>Unsure</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="required-step" data-required-step="7" hidden>
+                  <label>
+                    Expected Carbon Price *
+                    <select name="carbon_price_range" required>
+                      <option value="" selected disabled>Select one</option>
+                      <option>&lt;$10/tCO2e</option>
+                      <option>$10–$20/tCO2e</option>
+                      <option>$20–$40/tCO2e</option>
+                      <option>$40+/tCO2e</option>
+                      <option>Unsure (conservative default applied)</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="required-step" data-required-step="8" hidden>
+                  <label>
+                    Land Tenure Status *
+                    <select name="land_tenure_status" required>
+                      <option value="" selected disabled>Select one</option>
+                      <option>Secure ownership</option>
+                      <option>Lease agreement</option>
+                      <option>Community / shared land</option>
+                      <option>Unclear</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+              <div class="required-actions">
+                <button type="button" class="btn btn-ghost" id="required-back" hidden>Back</button>
+                <button type="button" class="btn" id="required-next">Next</button>
               </div>
             </div>
 

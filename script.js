@@ -618,6 +618,11 @@ if (intakeForm) {
   const currentLandUseSelect = intakeForm.querySelector('#current-land-use');
   const currentLandUseOtherWrap = intakeForm.querySelector('#current-land-use-other-wrap');
   const currentLandUseOther = intakeForm.querySelector('#current-land-use-other');
+  const requiredSteps = Array.from(intakeForm.querySelectorAll('.required-step'));
+  const requiredProgress = intakeForm.querySelector('#required-progress');
+  const requiredBack = intakeForm.querySelector('#required-back');
+  const requiredNext = intakeForm.querySelector('#required-next');
+  let currentRequiredStep = 0;
 
   const updateOtherField = (select, wrap, input, triggerText) => {
     if (!select || !wrap || !input) return;
@@ -630,11 +635,79 @@ if (intakeForm) {
     }
   };
 
+  const updateRequiredStep = () => {
+    requiredSteps.forEach((step, index) => {
+      const isActive = index === currentRequiredStep;
+      step.hidden = !isActive;
+      step.classList.toggle('is-active', isActive);
+    });
+
+    if (requiredProgress) {
+      requiredProgress.textContent = `Step ${currentRequiredStep + 1} of ${requiredSteps.length}`;
+    }
+
+    if (requiredBack) {
+      requiredBack.hidden = currentRequiredStep === 0;
+    }
+
+    if (requiredNext) {
+      requiredNext.textContent = currentRequiredStep === requiredSteps.length - 1 ? 'Required inputs complete' : 'Next';
+      requiredNext.disabled = currentRequiredStep === requiredSteps.length - 1;
+    }
+
+    const activeField = requiredSteps[currentRequiredStep]?.querySelector('input, select, textarea');
+    if (activeField) {
+      activeField.focus();
+    }
+  };
+
+  const validateRequiredStep = () => {
+    const fields = Array.from(requiredSteps[currentRequiredStep]?.querySelectorAll('input, select, textarea') || []);
+    for (const field of fields) {
+      if (!field.checkValidity()) {
+        field.reportValidity();
+        return false;
+      }
+    }
+    return true;
+  };
+
   if (currentLandUseSelect) {
     currentLandUseSelect.addEventListener('change', () => {
       updateOtherField(currentLandUseSelect, currentLandUseOtherWrap, currentLandUseOther, 'Other');
     });
   }
 
+  if (requiredNext) {
+    requiredNext.addEventListener('click', () => {
+      if (!validateRequiredStep()) return;
+      currentRequiredStep = Math.min(requiredSteps.length - 1, currentRequiredStep + 1);
+      updateRequiredStep();
+    });
+  }
+
+  if (requiredBack) {
+    requiredBack.addEventListener('click', () => {
+      currentRequiredStep = Math.max(0, currentRequiredStep - 1);
+      updateRequiredStep();
+    });
+  }
+
+  intakeForm.addEventListener('submit', (event) => {
+    const incompleteStep = requiredSteps.findIndex((step) => {
+      const fields = Array.from(step.querySelectorAll('input, select, textarea'));
+      return fields.some((field) => !field.checkValidity());
+    });
+
+    if (incompleteStep >= 0) {
+      event.preventDefault();
+      currentRequiredStep = incompleteStep;
+      updateRequiredStep();
+      const invalidField = requiredSteps[incompleteStep].querySelector(':invalid');
+      if (invalidField) invalidField.reportValidity();
+    }
+  });
+
   updateOtherField(currentLandUseSelect, currentLandUseOtherWrap, currentLandUseOther, 'Other');
+  updateRequiredStep();
 }
