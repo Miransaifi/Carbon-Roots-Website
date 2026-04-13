@@ -504,6 +504,13 @@ section[id] {
   border: 1px solid #dde4db;
   border-radius: 10px;
   padding: 0.4rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.insight-block:hover {
+  border-color: #c7d6c7;
+  box-shadow: 0 10px 24px rgba(12, 20, 16, 0.06);
+  transform: translateY(-1px);
 }
 
 .insight-toggle-btn {
@@ -548,6 +555,11 @@ section[id] {
 
 .insight-toggle.is-open .insight-toggle-icon {
   content: "−";
+}
+
+.insight-toggle.is-open {
+  border-color: #c7d6c7;
+  box-shadow: 0 12px 26px rgba(12, 20, 16, 0.07);
 }
 
 .insight-toggle.is-open .insight-toggle-btn {
