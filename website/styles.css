@@ -325,16 +325,15 @@ section[id] {
   background: var(--gold);
 }
 
-.boundaries {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.16rem;
-  box-shadow: var(--shadow);
-}
-
 .boundary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
 .boundary-grid > div { border: 1px solid var(--border); border-radius: 12px; padding: 0.8rem; }
+
+.turnaround-line {
+  color: #4f5851;
+  margin: 1.25rem 0 0;
+  max-width: none;
+  white-space: nowrap;
+}
 
 .chips { display: flex; flex-wrap: wrap; gap: 0.58rem; margin-top: 1.1rem; }
 .chips span {
