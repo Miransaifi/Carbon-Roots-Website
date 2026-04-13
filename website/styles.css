@@ -160,7 +160,7 @@ a { color: inherit; text-decoration: none; }
   font-size: 0.84rem;
 }
 
-.section { padding: 5.2rem 0; }
+.section { padding: 6.6rem 0; }
 .section-soft { background: var(--bg-soft); }
 
 section[id] {
@@ -186,10 +186,10 @@ section[id] {
 .about-card li { margin-bottom: 0.45rem; }
 
 .cards-3x {
-  margin-top: 1.45rem;
+  margin-top: 1.8rem;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 .card {
@@ -309,7 +309,7 @@ section[id] {
 .two-up {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.1rem;
+  gap: 1.8rem;
 }
 
 .bullets { margin: 1rem 0 0; padding: 0; list-style: none; }
@@ -336,8 +336,8 @@ section[id] {
 }
 
 .snapshot-cta {
-  margin-top: 1.4rem;
-  padding: 1.35rem;
+  margin-top: 2rem;
+  padding: 1.6rem;
   background: linear-gradient(160deg, #101714, #0d1311);
   color: var(--text-light);
   border: 1px solid rgba(200, 167, 104, 0.22);
@@ -406,8 +406,8 @@ section[id] {
 }
 
 .example-output {
-  margin-top: 2.1rem;
-  padding-top: 1.2rem;
+  margin-top: 3rem;
+  padding-top: 1.6rem;
 }
 
 .example-head {
