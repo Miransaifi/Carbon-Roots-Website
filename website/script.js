@@ -28,6 +28,24 @@ if (yearNode) {
   yearNode.textContent = new Date().getFullYear();
 }
 
+const insightToggles = Array.from(document.querySelectorAll('[data-insight-toggle]'));
+if (insightToggles.length) {
+  insightToggles.forEach((toggle) => {
+    const button = toggle.querySelector('.insight-toggle-btn');
+    const content = toggle.querySelector('.insight-content');
+    const icon = toggle.querySelector('.insight-toggle-icon');
+    if (!button || !content || !icon) return;
+
+    button.addEventListener('click', () => {
+      const isOpen = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', String(!isOpen));
+      content.hidden = isOpen;
+      toggle.classList.toggle('is-open', !isOpen);
+      icon.textContent = isOpen ? '+' : '−';
+    });
+  });
+}
+
 const engineTrack = document.querySelector('#engine-track');
 const enginePrev = document.querySelector('#engine-prev');
 const engineNext = document.querySelector('#engine-next');
