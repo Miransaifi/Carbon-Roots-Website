@@ -429,8 +429,6 @@
             <input type="email" name="email" />
             <input type="text" name="country_region" />
             <input type="number" name="land_area_ha" />
-            <input type="text" name="land_type" />
-            <input type="text" name="land_type_other" />
             <input type="text" name="project_type" />
             <input type="text" name="current_land_use" />
             <input type="text" name="current_land_use_other" />
@@ -448,9 +446,9 @@
           </form>
 
           <p class="eyebrow">Project intake</p>
-          <h2>Share the key inputs needed to run the Carbon Roots engine.</h2>
+          <h2>Request a Project Snapshot</h2>
           <p class="intake-helper">
-            This is a quick project intake. You do not need exact data, approximate inputs are sufficient for early-stage feasibility.
+            Provide a few key details about your project. You do not need exact inputs — missing values will be estimated using regional and project-specific benchmark assumptions.
           </p>
           <p class="intake-offer-note" id="intake-offer-note" hidden></p>
           <form id="intake-form" class="intake-form" name="project-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field">
@@ -462,55 +460,26 @@
             </p>
             <input type="hidden" name="requested_service" id="requested-service" value="Full pre-feasibility review" />
 
-            <div class="form-section">
-              <p class="form-section-kicker">Section 1</p>
-              <h3>Basic project info</h3>
+            <div class="form-section form-section-compact">
+              <h3>Contact Information</h3>
               <div class="form-grid">
                 <label>
-                  What would you like to request?
-                  <select name="requested_service_select" id="requested-service-select" required>
-                    <option value="Full pre-feasibility review" selected>Full pre-feasibility review</option>
-                    <option value="Free project snapshot">Free project snapshot</option>
-                  </select>
-                </label>
-                <label>
-                  Full name
+                  Full Name *
                   <input type="text" name="full_name" placeholder="Your name" required />
                 </label>
                 <label>
-                  Email
+                  Email *
                   <input type="email" name="email" placeholder="you@example.com" required />
                 </label>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h3>Required Inputs</h3>
+              <p class="form-section-note">These are the minimum inputs needed to run the model.</p>
+              <div class="form-grid">
                 <label>
-                  Country / region
-                  <input type="text" name="country_region" placeholder="e.g. Kenya, Rift Valley" required />
-                </label>
-                <label>
-                  Land area (ha)
-                  <input type="number" name="land_area_ha" placeholder="e.g. 1250" min="0" step="0.1" required />
-                </label>
-                <label>
-                  Land type
-                  <select name="land_type" id="land-type" required>
-                    <option value="" selected disabled>Select one</option>
-                    <option>Degraded grassland</option>
-                    <option>Degraded cropland</option>
-                    <option>Degraded forest land</option>
-                    <option>Pasture / grazing land</option>
-                    <option>Shrubland / bushland</option>
-                    <option>Bare / eroded land</option>
-                    <option>Mixed agricultural mosaic</option>
-                    <option>Riparian corridor / buffer land</option>
-                    <option>Community / smallholder mixed-use land</option>
-                    <option>Other (specify)</option>
-                  </select>
-                </label>
-                <label id="land-type-other-wrap" hidden>
-                  Please specify land type
-                  <input type="text" name="land_type_other" id="land-type-other" placeholder="Approximate description is fine" />
-                </label>
-                <label>
-                  Project type
+                  Project Type *
                   <select name="project_type" required>
                     <option value="" selected disabled>Select one</option>
                     <option>Afforestation / Reforestation (ARR)</option>
@@ -520,18 +489,15 @@
                   </select>
                 </label>
                 <label>
-                  Target first issuance year
-                  <input type="number" name="timeline" placeholder="e.g. 2030" min="2025" step="1" required />
+                  Country / Region *
+                  <input type="text" name="country_region" placeholder="e.g. Kenya, Rift Valley" required />
                 </label>
-              </div>
-            </div>
-
-            <div class="form-section">
-              <p class="form-section-kicker">Section 2</p>
-              <h3>Project setup and timeline</h3>
-              <div class="form-grid">
                 <label>
-                  Current land use
+                  Land Area (ha) *
+                  <input type="number" name="land_area_ha" placeholder="e.g. 1250" min="0" step="0.1" required />
+                </label>
+                <label>
+                  Current Land Use *
                   <select name="current_land_use" id="current-land-use" required>
                     <option value="" selected disabled>Select one</option>
                     <option>Degraded / bare land</option>
@@ -546,11 +512,11 @@
                   <input type="text" name="current_land_use_other" id="current-land-use-other" placeholder="Approximate description is fine" />
                 </label>
                 <label>
-                  Planting / implementation start year
+                  Planting / Implementation Start Year *
                   <input type="number" name="implementation_start_year" placeholder="e.g. 2026" min="2025" step="1" required />
                 </label>
                 <label>
-                  Crediting period
+                  Crediting Period *
                   <select name="crediting_period" required>
                     <option value="" selected disabled>Select one</option>
                     <option>20 years</option>
@@ -560,7 +526,35 @@
                   </select>
                 </label>
                 <label>
-                  Implementation approach
+                  Expected Carbon Price *
+                  <select name="carbon_price_range" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>&lt;$10/tCO2e</option>
+                    <option>$10–$20/tCO2e</option>
+                    <option>$20–$40/tCO2e</option>
+                    <option>$40+/tCO2e</option>
+                    <option>Unsure (conservative default applied)</option>
+                  </select>
+                </label>
+                <label>
+                  Land Tenure Status *
+                  <select name="land_tenure_status" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Secure ownership</option>
+                    <option>Lease agreement</option>
+                    <option>Community / shared land</option>
+                    <option>Unclear</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h3>Optional Inputs</h3>
+              <p class="form-section-note">These improve accuracy. If not provided, Carbon Roots will apply regional and project-specific benchmark assumptions.</p>
+              <div class="form-grid">
+                <label>
+                  Implementation Approach
                   <select name="implementation_approach">
                     <option value="" selected disabled>Select one</option>
                     <option>All at once</option>
@@ -569,11 +563,7 @@
                   </select>
                 </label>
                 <label>
-                  Do you have a species or system in mind?
-                  <input type="text" name="species_intentions" placeholder="Optional" />
-                </label>
-                <label>
-                  Expected survival rate
+                  Expected Survival Rate
                   <select name="expected_survival_rate">
                     <option value="" selected disabled>Select one</option>
                     <option>&lt;60%</option>
@@ -582,16 +572,8 @@
                     <option>Unsure</option>
                   </select>
                 </label>
-              </div>
-            </div>
-
-            <div class="form-section">
-              <p class="form-section-kicker">Section 3</p>
-              <h3>Costs and commercial assumptions</h3>
-              <p class="form-section-note">Approximate values are fine. Select “Unsure” if unknown.</p>
-              <div class="form-grid">
                 <label>
-                  Estimated establishment cost per hectare
+                  Estimated Establishment Cost per Hectare
                   <select name="establishment_cost_range">
                     <option value="" selected disabled>Select one</option>
                     <option>&lt;$500</option>
@@ -602,7 +584,7 @@
                   </select>
                 </label>
                 <label>
-                  Estimated annual maintenance cost per hectare
+                  Estimated Annual Maintenance Cost per Hectare
                   <select name="maintenance_cost_range">
                     <option value="" selected disabled>Select one</option>
                     <option>&lt;$50</option>
@@ -613,35 +595,22 @@
                   </select>
                 </label>
                 <label>
-                  Expected carbon price or target buyer
-                  <select name="carbon_price_range">
-                    <option value="" selected disabled>Select one</option>
-                    <option>&lt;$10/tCO2e</option>
-                    <option>$10–$20/tCO2e</option>
-                    <option>$20–$40/tCO2e</option>
-                    <option>$40+/tCO2e</option>
-                    <option>Unsure</option>
-                  </select>
-                </label>
-                <label>
-                  Land tenure status
-                  <select name="land_tenure_status">
-                    <option value="" selected disabled>Select one</option>
-                    <option>Secure ownership</option>
-                    <option>Lease agreement</option>
-                    <option>Community / shared land</option>
-                    <option>Unclear</option>
-                  </select>
+                  Species / System in Mind
+                  <input type="text" name="species_intentions" placeholder="Optional" />
                 </label>
                 <label class="form-span-2">
-                  Notes
-                  <textarea name="notes" rows="5" placeholder="Add any available assumptions, studies, boundaries, or relevant context."></textarea>
+                  Notes / Additional Context
+                  <textarea name="notes" rows="5" placeholder="Optional"></textarea>
                 </label>
               </div>
+              <p class="form-assumption-note">
+                Where optional inputs are not provided, Carbon Roots uses benchmark assumptions based on project type, geography, and land context.
+              </p>
             </div>
 
-            <div class="wizard-actions">
-              <button type="submit" class="btn">Submit project intake</button>
+            <div class="submit-block">
+              <p class="submit-note">Most carbon projects fail because feasibility is not tested under real pricing and delivery conditions.</p>
+              <button type="submit" class="btn">Get Project Snapshot</button>
             </div>
 
             <div class="intake-actions">
