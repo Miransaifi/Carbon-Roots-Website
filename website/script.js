@@ -36,7 +36,9 @@ if (insightToggles.length) {
     const icon = toggle.querySelector('.insight-toggle-icon');
     if (!button || !content || !icon) return;
 
-    button.addEventListener('click', () => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       const isOpen = button.getAttribute('aria-expanded') === 'true';
       button.setAttribute('aria-expanded', String(!isOpen));
       content.hidden = isOpen;
