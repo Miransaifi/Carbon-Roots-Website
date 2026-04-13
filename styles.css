@@ -724,13 +724,8 @@ section[id] {
   border-top: 0;
 }
 
-.form-section-kicker {
-  margin: 0 0 0.35rem;
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #6a756d;
-  font-weight: 700;
+.form-section-compact {
+  padding-top: 0;
 }
 
 .form-section-note {
@@ -741,6 +736,23 @@ section[id] {
 
 .form-span-2 {
   grid-column: span 2;
+}
+
+.form-assumption-note {
+  margin: 1rem 0 0;
+  color: #5e665f;
+  font-size: 0.92rem;
+  max-width: 62ch;
+}
+
+.submit-block {
+  margin-top: 1.1rem;
+}
+
+.submit-note {
+  margin: 0 0 0.8rem;
+  color: #4f5851;
+  max-width: 52ch;
 }
 
 .wizard-actions {

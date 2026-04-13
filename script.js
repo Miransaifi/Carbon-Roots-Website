@@ -615,37 +615,14 @@ initExampleOutputCharts();
 
 const intakeForm = document.querySelector('#intake-form');
 if (intakeForm) {
-  const landTypeSelect = intakeForm.querySelector('#land-type');
-  const landTypeOtherWrap = intakeForm.querySelector('#land-type-other-wrap');
-  const landTypeOther = intakeForm.querySelector('#land-type-other');
   const currentLandUseSelect = intakeForm.querySelector('#current-land-use');
   const currentLandUseOtherWrap = intakeForm.querySelector('#current-land-use-other-wrap');
   const currentLandUseOther = intakeForm.querySelector('#current-land-use-other');
-  const requestedServiceInput = document.querySelector('#requested-service');
-  const requestedServiceSelect = document.querySelector('#requested-service-select');
-  const intakeOfferNote = document.querySelector('#intake-offer-note');
-  const intakeOfferLinks = Array.from(document.querySelectorAll('[data-intake-offer]'));
-  let landTypeTouched = false;
-  let currentLandUseTouched = false;
 
-  const setRequestedService = (service) => {
-    const selectedService = service && String(service).trim() ? String(service).trim() : 'Full pre-feasibility review';
-    if (requestedServiceInput) {
-      requestedServiceInput.value = selectedService;
-    }
-    if (requestedServiceSelect && requestedServiceSelect.value !== selectedService) {
-      requestedServiceSelect.value = selectedService;
-    }
-    if (intakeOfferNote) {
-      intakeOfferNote.textContent = `Selected request: ${selectedService}`;
-      intakeOfferNote.hidden = false;
-    }
-  };
-
-  const updateOtherField = (select, wrap, input, triggerText, touched) => {
+  const updateOtherField = (select, wrap, input, triggerText) => {
     if (!select || !wrap || !input) return;
     const selectedText = select.options[select.selectedIndex]?.textContent?.trim() || '';
-    const shouldShow = touched && selectedText === triggerText;
+    const shouldShow = selectedText === triggerText;
     wrap.hidden = !shouldShow;
     input.required = shouldShow;
     if (!shouldShow) {
@@ -653,35 +630,11 @@ if (intakeForm) {
     }
   };
 
-  if (landTypeSelect) {
-    landTypeSelect.addEventListener('change', () => {
-      landTypeTouched = true;
-      updateOtherField(landTypeSelect, landTypeOtherWrap, landTypeOther, 'Other (specify)', landTypeTouched);
-    });
-  }
-
   if (currentLandUseSelect) {
     currentLandUseSelect.addEventListener('change', () => {
-      currentLandUseTouched = true;
-      updateOtherField(currentLandUseSelect, currentLandUseOtherWrap, currentLandUseOther, 'Other', currentLandUseTouched);
+      updateOtherField(currentLandUseSelect, currentLandUseOtherWrap, currentLandUseOther, 'Other');
     });
   }
 
-  if (requestedServiceSelect) {
-    requestedServiceSelect.addEventListener('change', () => {
-      setRequestedService(requestedServiceSelect.value);
-    });
-  }
-
-  if (intakeOfferLinks.length) {
-    intakeOfferLinks.forEach((link) => {
-      link.addEventListener('click', () => {
-        setRequestedService(link.getAttribute('data-intake-offer'));
-      });
-    });
-  }
-
-  setRequestedService(requestedServiceInput?.value || 'Full pre-feasibility review');
-  updateOtherField(landTypeSelect, landTypeOtherWrap, landTypeOther, 'Other (specify)', landTypeTouched);
-  updateOtherField(currentLandUseSelect, currentLandUseOtherWrap, currentLandUseOther, 'Other', currentLandUseTouched);
+  updateOtherField(currentLandUseSelect, currentLandUseOtherWrap, currentLandUseOther, 'Other');
 }
