@@ -317,7 +317,6 @@ const initExampleOutputCharts = async () => {
     if (exampleProjectContext) {
       const contextParts = [
         country && String(country).trim(),
-        scenario && String(scenario).trim() ? `${String(scenario).trim()} scenario` : null,
       ].filter(Boolean);
       if (contextParts.length) {
         exampleProjectContext.textContent = `Illustrative pre-feasibility output, ${contextParts.join(' • ')}.`;
