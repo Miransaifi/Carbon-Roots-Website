@@ -613,22 +613,20 @@ const initExampleOutputCharts = async () => {
 
 initExampleOutputCharts();
 
-const intakeForm = document.querySelector('#intake-form.intake-wizard');
+const intakeForm = document.querySelector('#intake-form');
 if (intakeForm) {
-  const steps = Array.from(intakeForm.querySelectorAll('.form-step'));
-  const backBtn = intakeForm.querySelector('#wizard-back');
-  const nextBtn = intakeForm.querySelector('#wizard-next');
-  const submitBtn = intakeForm.querySelector('#wizard-submit');
-  const progress = intakeForm.querySelector('#wizard-progress');
   const landTypeSelect = intakeForm.querySelector('#land-type');
   const landTypeOtherWrap = intakeForm.querySelector('#land-type-other-wrap');
   const landTypeOther = intakeForm.querySelector('#land-type-other');
+  const currentLandUseSelect = intakeForm.querySelector('#current-land-use');
+  const currentLandUseOtherWrap = intakeForm.querySelector('#current-land-use-other-wrap');
+  const currentLandUseOther = intakeForm.querySelector('#current-land-use-other');
   const requestedServiceInput = document.querySelector('#requested-service');
   const requestedServiceSelect = document.querySelector('#requested-service-select');
   const intakeOfferNote = document.querySelector('#intake-offer-note');
   const intakeOfferLinks = Array.from(document.querySelectorAll('[data-intake-offer]'));
   let landTypeTouched = false;
-  let currentStep = 0;
+  let currentLandUseTouched = false;
 
   const setRequestedService = (service) => {
     const selectedService = service && String(service).trim() ? String(service).trim() : 'Full pre-feasibility review';
@@ -644,67 +642,28 @@ if (intakeForm) {
     }
   };
 
-  const updateLandTypeOther = () => {
-    if (!landTypeSelect || !landTypeOtherWrap || !landTypeOther) return;
-    const selectedText = landTypeSelect.options[landTypeSelect.selectedIndex]?.textContent?.trim() || '';
-    const isOther = selectedText === 'Other (specify)';
-    const shouldShow = landTypeTouched && isOther;
-    landTypeOtherWrap.hidden = !shouldShow;
-    landTypeOther.required = shouldShow;
+  const updateOtherField = (select, wrap, input, triggerText, touched) => {
+    if (!select || !wrap || !input) return;
+    const selectedText = select.options[select.selectedIndex]?.textContent?.trim() || '';
+    const shouldShow = touched && selectedText === triggerText;
+    wrap.hidden = !shouldShow;
+    input.required = shouldShow;
     if (!shouldShow) {
-      landTypeOther.value = '';
+      input.value = '';
     }
   };
-
-  const updateStep = () => {
-    steps.forEach((step, i) => {
-      const active = i === currentStep;
-      step.hidden = !active;
-      step.classList.toggle('is-active', active);
-    });
-
-    if (progress) {
-      progress.textContent = `Step ${currentStep + 1} of ${steps.length}`;
-    }
-
-    if (backBtn) backBtn.hidden = currentStep === 0;
-    if (nextBtn) nextBtn.hidden = currentStep === steps.length - 1;
-    if (submitBtn) submitBtn.hidden = currentStep !== steps.length - 1;
-
-    const activeField = steps[currentStep]?.querySelector('input, select, textarea');
-    if (activeField) activeField.focus();
-  };
-
-  const validateCurrentStep = () => {
-    const fields = Array.from(steps[currentStep].querySelectorAll('input, select, textarea'));
-    for (const field of fields) {
-      if (!field.checkValidity()) {
-        field.reportValidity();
-        return false;
-      }
-    }
-    return true;
-  };
-
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      if (!validateCurrentStep()) return;
-      currentStep = Math.min(steps.length - 1, currentStep + 1);
-      updateStep();
-    });
-  }
-
-  if (backBtn) {
-    backBtn.addEventListener('click', () => {
-      currentStep = Math.max(0, currentStep - 1);
-      updateStep();
-    });
-  }
 
   if (landTypeSelect) {
     landTypeSelect.addEventListener('change', () => {
       landTypeTouched = true;
-      updateLandTypeOther();
+      updateOtherField(landTypeSelect, landTypeOtherWrap, landTypeOther, 'Other (specify)', landTypeTouched);
+    });
+  }
+
+  if (currentLandUseSelect) {
+    currentLandUseSelect.addEventListener('change', () => {
+      currentLandUseTouched = true;
+      updateOtherField(currentLandUseSelect, currentLandUseOtherWrap, currentLandUseOther, 'Other', currentLandUseTouched);
     });
   }
 
@@ -722,13 +681,7 @@ if (intakeForm) {
     });
   }
 
-  intakeForm.addEventListener('submit', (event) => {
-    if (!validateCurrentStep()) {
-      event.preventDefault();
-    }
-  });
-
   setRequestedService(requestedServiceInput?.value || 'Full pre-feasibility review');
-  updateLandTypeOther();
-  updateStep();
+  updateOtherField(landTypeSelect, landTypeOtherWrap, landTypeOther, 'Other (specify)', landTypeTouched);
+  updateOtherField(currentLandUseSelect, currentLandUseOtherWrap, currentLandUseOther, 'Other', currentLandUseTouched);
 }
