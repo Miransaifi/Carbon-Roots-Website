@@ -49,8 +49,9 @@
               cost.
             </p>
             <div class="hero-cta">
-              <a href="#intake" class="btn">Request a pre-feasibility review</a>
-              <a href="#example-output" class="btn btn-ghost">See example output</a>
+              <a href="#intake" class="btn" data-intake-offer="Full pre-feasibility review">Request a pre-feasibility review</a>
+              <a href="#intake" class="btn btn-ghost" data-intake-offer="Free project snapshot">Request a free project snapshot</a>
+              <a href="#example-output-anchor" class="btn btn-ghost">See example output</a>
             </div>
           </div>
 
@@ -284,6 +285,7 @@
             </div>
           </div>
 
+          <div id="example-output-anchor"></div>
           <div class="example-output" aria-label="Example output" id="example-output">
             <p class="eyebrow">Example output</p>
             <div class="example-head">
@@ -423,37 +425,47 @@
           <p class="intake-offer-note" id="intake-offer-note" hidden></p>
           <form id="intake-form" class="intake-form intake-wizard" action="mailto:hello@carbonroots.co" method="post" enctype="text/plain">
             <input type="hidden" name="requested_service" id="requested-service" value="Full pre-feasibility review" />
-            <p class="wizard-progress" id="wizard-progress">Step 1 of 9</p>
+            <p class="wizard-progress" id="wizard-progress">Step 1 of 10</p>
 
             <div class="form-step is-active" data-step="1">
+              <label>
+                What would you like to request?
+                <select name="requested_service_select" id="requested-service-select" required>
+                  <option value="Full pre-feasibility review" selected>Full pre-feasibility review</option>
+                  <option value="Free project snapshot">Free project snapshot</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="form-step" data-step="2" hidden>
               <label>
                 Full name
                 <input type="text" name="full_name" placeholder="Your name" required />
               </label>
             </div>
 
-            <div class="form-step" data-step="2" hidden>
+            <div class="form-step" data-step="3" hidden>
               <label>
                 Email
                 <input type="email" name="email" placeholder="you@example.com" required />
               </label>
             </div>
 
-            <div class="form-step" data-step="3" hidden>
+            <div class="form-step" data-step="4" hidden>
               <label>
                 Country / region
                 <input type="text" name="country_region" placeholder="e.g. Kenya, Rift Valley" required />
               </label>
             </div>
 
-            <div class="form-step" data-step="4" hidden>
+            <div class="form-step" data-step="5" hidden>
               <label>
                 Total land area (hectares)
                 <input type="number" name="land_area_ha" placeholder="e.g. 1250" min="0" step="0.1" required />
               </label>
             </div>
 
-            <div class="form-step" data-step="5" hidden>
+            <div class="form-step" data-step="6" hidden>
               <label>
                 Land type
                 <select name="land_type" id="land-type" required>
@@ -476,7 +488,7 @@
               </label>
             </div>
 
-            <div class="form-step" data-step="6" hidden>
+            <div class="form-step" data-step="7" hidden>
               <label>
                 Project concept
                 <select name="project_concept" required>
@@ -492,21 +504,21 @@
               </label>
             </div>
 
-            <div class="form-step" data-step="7" hidden>
+            <div class="form-step" data-step="8" hidden>
               <label>
                 Timeline expectations
                 <input type="text" name="timeline" placeholder="e.g. first issuance target / implementation window" required />
               </label>
             </div>
 
-            <div class="form-step" data-step="8" hidden>
+            <div class="form-step" data-step="9" hidden>
               <label>
                 Species intentions (optional)
                 <input type="text" name="species_intentions" placeholder="If known" />
               </label>
             </div>
 
-            <div class="form-step" data-step="9" hidden>
+            <div class="form-step" data-step="10" hidden>
               <label>
                 Notes, assumptions, or existing studies (optional)
                 <textarea name="notes" rows="5" placeholder="Add any available boundaries, prior studies, land-use context, or implementation assumptions."></textarea>

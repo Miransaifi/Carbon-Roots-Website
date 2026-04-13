@@ -167,6 +167,13 @@ section[id] {
   scroll-margin-top: 210px;
 }
 
+#example-output-anchor {
+  display: block;
+  position: relative;
+  top: -210px;
+  visibility: hidden;
+}
+
 .section-grid {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
@@ -353,6 +360,15 @@ section[id] {
   color: #d5ddd7;
 }
 
+.snapshot-grid p,
+.snapshot-grid h4 {
+  color: #131714;
+}
+
+.snapshot-grid .btn {
+  color: #1a140b;
+}
+
 .snapshot-grid {
   margin-top: 1rem;
   display: grid;
@@ -361,7 +377,7 @@ section[id] {
 }
 
 .snapshot-grid > div {
-  background: rgba(255, 255, 255, 0.04);
+  background: #ffffff;
   border: 1px solid rgba(200, 167, 104, 0.2);
   border-radius: 12px;
   padding: 0.95rem;
@@ -379,7 +395,7 @@ section[id] {
 
 .snapshot-grid li {
   margin-bottom: 0.4rem;
-  color: #dce4df;
+  color: #24322b;
 }
 
 .snapshot-grid .btn {
