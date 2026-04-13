@@ -617,6 +617,7 @@ if (intakeForm) {
   const landTypeOtherWrap = intakeForm.querySelector('#land-type-other-wrap');
   const landTypeOther = intakeForm.querySelector('#land-type-other');
   const requestedServiceInput = document.querySelector('#requested-service');
+  const requestedServiceSelect = document.querySelector('#requested-service-select');
   const intakeOfferNote = document.querySelector('#intake-offer-note');
   const intakeOfferLinks = Array.from(document.querySelectorAll('[data-intake-offer]'));
   let landTypeTouched = false;
@@ -626,6 +627,9 @@ if (intakeForm) {
     const selectedService = service && String(service).trim() ? String(service).trim() : 'Full pre-feasibility review';
     if (requestedServiceInput) {
       requestedServiceInput.value = selectedService;
+    }
+    if (requestedServiceSelect && requestedServiceSelect.value !== selectedService) {
+      requestedServiceSelect.value = selectedService;
     }
     if (intakeOfferNote) {
       intakeOfferNote.textContent = `Selected request: ${selectedService}`;
@@ -694,6 +698,12 @@ if (intakeForm) {
     landTypeSelect.addEventListener('change', () => {
       landTypeTouched = true;
       updateLandTypeOther();
+    });
+  }
+
+  if (requestedServiceSelect) {
+    requestedServiceSelect.addEventListener('change', () => {
+      setRequestedService(requestedServiceSelect.value);
     });
   }
 
