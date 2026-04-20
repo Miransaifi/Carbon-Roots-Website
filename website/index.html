@@ -392,49 +392,6 @@
 
       <section id="get-started" class="section section-soft">
         <div class="container">
-          <form name="snapshot-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field" hidden>
-            <input type="hidden" name="form-name" value="snapshot-intake" />
-            <input type="text" name="bot-field" />
-            <input type="text" name="full_name" />
-            <input type="email" name="email" />
-            <input type="text" name="role" />
-            <input type="text" name="organization" />
-            <input type="text" name="project_type" />
-            <input type="text" name="country_region" />
-            <input type="number" name="land_area_ha" />
-            <input type="text" name="project_stage" />
-            <input type="text" name="decision_timeline" />
-            <input type="text" name="land_tenure_status" />
-            <input type="text" name="land_access_confidence" />
-            <textarea name="assumptions"></textarea>
-            <textarea name="unknowns"></textarea>
-            <textarea name="decision_unlock"></textarea>
-          </form>
-
-          <form name="full-review-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field" hidden>
-            <input type="hidden" name="form-name" value="full-review-intake" />
-            <input type="text" name="bot-field" />
-            <input type="text" name="full_name" />
-            <input type="email" name="email" />
-            <input type="text" name="organization" />
-            <input type="text" name="project_type" />
-            <input type="text" name="country_region" />
-            <input type="number" name="land_area_ha" />
-            <input type="text" name="project_stage" />
-            <input type="text" name="decision_timeline" />
-            <input type="text" name="land_tenure_status" />
-            <textarea name="land_rights_evidence"></textarea>
-            <textarea name="baseline_land_use"></textarea>
-            <input type="text" name="funding_model" />
-            <input type="text" name="budget_band" />
-            <input type="text" name="species_intentions" />
-            <input type="text" name="expected_survival_rate" />
-            <input type="text" name="establishment_cost_range" />
-            <input type="text" name="maintenance_cost_range" />
-            <textarea name="decision_unlock"></textarea>
-            <textarea name="notes"></textarea>
-          </form>
-
           <p class="eyebrow">Get started</p>
           <h2>Choose the right intake path for your project.</h2>
           <p class="intake-helper">Use the free snapshot for fast triage, or apply for a full pre-feasibility review when you need deeper decision support.</p>
@@ -464,189 +421,224 @@
 
           <form id="snapshot-form" class="intake-form" name="snapshot-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field">
             <input type="hidden" name="form-name" value="snapshot-intake" />
-            <p hidden>
-              <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
-            </p>
             <h3>Free Project Snapshot</h3>
+            <p class="form-intro">Describe your project in plain terms, our engine classifies fit across Verra, Gold Standard, ART TREES, Plan Vivo and other major standards. You don't need to pick a standard.</p>
+            <div class="form-progress"><span class="form-progress-label">Step <b data-step-current>1</b> of 3</span><div class="progress-track"><div class="progress-fill" data-progress-fill></div></div></div>
+            <p hidden><label>Don’t fill this out if you're human: <input name="bot-field" /></label></p>
+            <input type="hidden" name="payload_json" />
+            <input type="hidden" name="flagged_gaps" />
 
-            <div class="form-section form-section-compact">
-              <h4>Contact and context</h4>
+            <div class="form-step" data-step="1">
+              <h4>Contact</h4>
               <div class="form-grid">
                 <label>Full Name *<input type="text" name="full_name" required /></label>
                 <label>Email *<input type="email" name="email" required /></label>
-                <label>Role *<input type="text" name="role" required /></label>
+                <label>Role *
+                  <select name="role" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Developer</option><option>Landowner</option><option>Investor or buyer</option><option>Advisor or consultant</option><option>Other</option>
+                  </select>
+                </label>
                 <label>Organization<input type="text" name="organization" /></label>
               </div>
             </div>
 
-            <div class="form-section">
-              <h4>Mandatory screening inputs</h4>
+            <div class="form-step" data-step="2" hidden>
+              <h4>About your project</h4>
               <div class="form-grid">
-                <label>Project Type *
-                  <select name="project_type" required>
+                <label>ARR Activity Type *
+                  <select name="arr_activity_type" required>
                     <option value="" selected disabled>Select one</option>
-                    <option>Afforestation / Reforestation (ARR)</option>
-                    <option>Agroforestry</option>
-                    <option>Assisted Natural Regeneration (ANR)</option>
-                    <option>Restoration (mixed)</option>
+                    <option>Afforestation</option><option>Reforestation</option><option>Assisted Natural Regeneration</option><option>Agroforestry</option><option>Mixed</option><option>Unsure</option>
                   </select>
                 </label>
-                <label>Country / Region *<input type="text" name="country_region" required /></label>
-                <label>Land Area (ha) *<input type="number" name="land_area_ha" min="1" step="0.1" required /></label>
+                <label>Country *
+                  <select name="country" data-country-select required></select>
+                </label>
+                <label>Region
+                  <input type="text" name="region" placeholder="State, province, or area (optional)" />
+                </label>
+                <label>Land Area (ha) *
+                  <input type="number" name="land_area_ha" min="0.01" max="1000000" step="0.01" required />
+                </label>
+                <label>Prior land cover *<span class="field-help">When did this land last have meaningful tree cover?</span>
+                  <select name="prior_land_cover" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Never forested, or more than 50 years since forest cover</option>
+                    <option>10–50 years since forest cover</option>
+                    <option>5–10 years since forest cover</option>
+                    <option>Less than 5 years since forest cover</option>
+                    <option>Currently has some tree cover</option>
+                    <option>Unsure</option>
+                  </select>
+                </label>
+                <label>Land Tenure Status *<span class="field-help">Closest match is fine, we'll confirm in review.</span>
+                  <select name="land_tenure_status" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Freehold-owned</option><option>Long lease (more than 30 years)</option><option>Short lease (less than 30 years)</option><option>Community or customary</option><option>Concession</option><option>Not yet secured</option><option>Unsure</option>
+                  </select>
+                </label>
                 <label>Project Stage *
                   <select name="project_stage" required>
                     <option value="" selected disabled>Select one</option>
-                    <option>Concept</option>
-                    <option>Pre-development</option>
-                    <option>Investor outreach</option>
+                    <option>Concept</option><option>Pre-feasibility</option><option>Feasibility</option><option>Financing</option><option>Operational</option><option>Unsure</option>
                   </select>
                 </label>
-                <label>Decision Timeline *<input type="text" name="decision_timeline" placeholder="e.g. Q3 2026" required /></label>
-                <label>Land Tenure Status *
-                  <select name="land_tenure_status" required>
+                <label>Decision Timeline *
+                  <select name="decision_timeline" required>
                     <option value="" selected disabled>Select one</option>
-                    <option>Secure ownership</option>
-                    <option>Lease agreement</option>
-                    <option>Community / shared land</option>
-                    <option>Unclear</option>
+                    <option>Less than 3 months</option><option>3–6 months</option><option>6–12 months</option><option>More than 12 months</option><option>Unknown</option>
                   </select>
                 </label>
-                <label>Land Access Confidence *
-                  <select name="land_access_confidence" required>
+                <label>Decision this should unlock *<span class="field-help">What does a 'yes' from us let you do next?</span>
+                  <select name="decision_unlock" data-other-toggle="snapshot-decision-other" required>
                     <option value="" selected disabled>Select one</option>
-                    <option>High</option>
-                    <option>Medium</option>
-                    <option>Low</option>
+                    <option>Go/no-go on site acquisition</option><option>Investment committee screening</option><option>Fundraising preparation</option><option>Partner selection</option><option>Offtake negotiation</option><option>Internal feasibility gate</option><option>Other (specify)</option>
                   </select>
                 </label>
-                <label>Decision this should unlock *<input type="text" name="decision_unlock" required /></label>
+                <label id="snapshot-decision-other" hidden>Please specify
+                  <input type="text" name="decision_unlock_other" />
+                </label>
               </div>
             </div>
 
-            <div class="form-section">
-              <h4>Assumptions and unknowns</h4>
-              <div class="form-grid">
-                <label>Top 3 assumptions *<textarea name="assumptions" rows="4" required></textarea></label>
-                <label>Key unknowns *<textarea name="unknowns" rows="4" required></textarea></label>
+            <div class="form-step" data-step="3" hidden>
+              <h4>What's confirmed</h4>
+              <div class="checkbox-grid" data-array-name="whats_confirmed">
+                <label><input type="checkbox" value="Site identified on a map" /> Site identified on a map</label>
+                <label><input type="checkbox" value="Tenure documented" /> Tenure documented</label>
+                <label><input type="checkbox" value="Baseline land-use evidence" /> Baseline land-use evidence</label>
+                <label><input type="checkbox" value="Species plan" /> Species plan</label>
+                <label><input type="checkbox" value="Community engagement started" /> Community engagement started</label>
+                <label><input type="checkbox" value="Offtake interest or buyer identified" /> Offtake interest or buyer identified</label>
+                <label><input type="checkbox" value="Capital raised or committed" /> Capital raised or committed</label>
               </div>
             </div>
 
-            <div class="submit-block">
-              <button type="submit" class="btn">Submit Free Snapshot</button>
+            <div class="wizard-actions">
+              <button type="button" class="btn btn-ghost" data-step-back hidden>Back</button>
+              <button type="button" class="btn" data-step-next>Next</button>
+              <button type="submit" class="btn" data-step-submit hidden>Submit Free Snapshot</button>
             </div>
           </form>
 
-          <form id="full-review-form" class="intake-form" name="full-review-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field">
+          <form id="full-review-form" class="intake-form" name="full-review-intake" method="POST" action="/thank-you/" enctype="multipart/form-data" data-netlify="true" netlify netlify-honeypot="bot-field">
             <input type="hidden" name="form-name" value="full-review-intake" />
-            <p hidden><label>Don’t fill this out if you're human: <input name="bot-field" /></label></p>
             <h3>Full Pre-Feasibility Review Application</h3>
+            <p class="form-intro">Describe your project in plain terms, our engine classifies fit across Verra, Gold Standard, ART TREES, Plan Vivo and other major standards. You don't need to pick a standard.</p>
+            <p class="save-resume"><a href="#" id="save-resume-link">Save and resume via email</a></p>
+            <div class="form-progress"><span class="form-progress-label">Step <b data-step-current>1</b> of 5</span><div class="progress-track"><div class="progress-fill" data-progress-fill></div></div></div>
+            <div class="confidence-meter"><span>Review confidence: <b id="review-confidence">0%</b></span><small>Adding optional detail raises the confidence of your pre-feasibility output.</small></div>
+            <p hidden><label>Don’t fill this out if you're human: <input name="bot-field" /></label></p>
+            <input type="hidden" name="payload_json" />
+            <input type="hidden" name="flagged_gaps" />
 
-            <div class="form-section form-section-compact">
+            <div class="form-step" data-step="1">
               <h4>Applicant</h4>
               <div class="form-grid">
                 <label>Full Name *<input type="text" name="full_name" required /></label>
                 <label>Email *<input type="email" name="email" required /></label>
+                <label>Role *
+                  <select name="role" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Developer</option><option>Landowner</option><option>Investor or buyer</option><option>Advisor or consultant</option><option>Other</option>
+                  </select>
+                </label>
                 <label>Organization *<input type="text" name="organization" required /></label>
               </div>
             </div>
 
-            <div class="form-section">
-              <h4>Project fundamentals</h4>
+            <div class="form-step" data-step="2" hidden>
+              <h4>About your project</h4>
               <div class="form-grid">
-                <label>Project Type *
-                  <select name="project_type" required>
-                    <option value="" selected disabled>Select one</option>
-                    <option>Afforestation / Reforestation (ARR)</option>
-                    <option>Agroforestry</option>
-                    <option>Assisted Natural Regeneration (ANR)</option>
-                    <option>Restoration (mixed)</option>
-                  </select>
-                </label>
-                <label>Country / Region *<input type="text" name="country_region" required /></label>
-                <label>Land Area (ha) *<input type="number" name="land_area_ha" min="1" step="0.1" required /></label>
-                <label>Project Stage *
-                  <select name="project_stage" required>
-                    <option value="" selected disabled>Select one</option>
-                    <option>Concept</option>
-                    <option>Pre-development</option>
-                    <option>Investor outreach</option>
-                  </select>
-                </label>
-                <label>Decision Timeline *<input type="text" name="decision_timeline" required /></label>
-                <label>Land Tenure Status *
-                  <select name="land_tenure_status" required>
-                    <option value="" selected disabled>Select one</option>
-                    <option>Secure ownership</option>
-                    <option>Lease agreement</option>
-                    <option>Community / shared land</option>
-                    <option>Unclear</option>
-                  </select>
-                </label>
-                <label class="form-span-2">Baseline land use *<textarea name="baseline_land_use" rows="3" required></textarea></label>
-                <label class="form-span-2">Land rights evidence *<textarea name="land_rights_evidence" rows="3" required></textarea></label>
+                <label>ARR Activity Type *<select name="arr_activity_type" required><option value="" selected disabled>Select one</option><option>Afforestation</option><option>Reforestation</option><option>Assisted Natural Regeneration</option><option>Agroforestry</option><option>Mixed</option><option>Unsure</option></select></label>
+                <label>Country *<select name="country" data-country-select required></select></label>
+                <label>Region<input type="text" name="region" placeholder="State, province, or area (optional)" /></label>
+                <label>Land Area (ha) *<input type="number" name="land_area_ha" min="0.01" max="1000000" step="0.01" required /></label>
+                <label>Prior land cover *<span class="field-help">When did this land last have meaningful tree cover?</span><select name="prior_land_cover" required><option value="" selected disabled>Select one</option><option>Never forested, or more than 50 years since forest cover</option><option>10–50 years since forest cover</option><option>5–10 years since forest cover</option><option>Less than 5 years since forest cover</option><option>Currently has some tree cover</option><option>Unsure</option></select></label>
+                <label>Project Stage *<select name="project_stage" required><option value="" selected disabled>Select one</option><option>Concept</option><option>Pre-feasibility</option><option>Feasibility</option><option>Financing</option><option>Operational</option><option>Unsure</option></select></label>
+                <label>Decision Timeline *<select name="decision_timeline" required><option value="" selected disabled>Select one</option><option>Less than 3 months</option><option>3–6 months</option><option>6–12 months</option><option>More than 12 months</option><option>Unknown</option></select></label>
+                <label>Land Tenure Status *<span class="field-help">Closest match is fine, we'll confirm in review.</span><select name="land_tenure_status" id="full-tenure" required><option value="" selected disabled>Select one</option><option>Freehold-owned</option><option>Long lease (more than 30 years)</option><option>Short lease (less than 30 years)</option><option>Community or customary</option><option>Concession</option><option>Not yet secured</option><option>Unsure</option></select></label>
               </div>
             </div>
 
-            <div class="form-section">
-              <h4>Commercial and technical assumptions</h4>
+            <div class="form-step" data-step="3" hidden>
+              <h4>Site & biophysical</h4>
               <div class="form-grid">
-                <label>Funding model *
-                  <select name="funding_model" required>
-                    <option value="" selected disabled>Select one</option>
-                    <option>Self-funded</option>
-                    <option>Investor-funded</option>
-                    <option>Blended finance</option>
-                    <option>Undecided</option>
-                  </select>
+                <label>Planting approach *<select name="planting_approach" required><option value="" selected disabled>Select one</option><option>Monoculture plantation</option><option>Mixed native species</option><option>Mixed native + exotic species</option><option>ANR with enrichment planting</option><option>Agroforestry</option><option>Unsure</option></select></label>
+                <label>Start year of activities *<input type="number" name="start_year_of_activities" min="2020" required /><span class="field-help">If unknown, tick Unsure below.</span><span class="inline-check"><input type="checkbox" name="start_year_unsure" /> Unsure</span></label>
+                <label>Planned crediting period *<select name="planned_crediting_period" required><option value="" selected disabled>Select one</option><option>20 years</option><option>30 years</option><option>40 years</option><option>60 years</option><option>100 years</option><option>Unsure</option></select></label>
+                <label>Baseline land use *<select name="baseline_land_use" required><option value="" selected disabled>Select one</option><option>Degraded cropland</option><option>Active cropland</option><option>Pasture</option><option>Degraded grassland</option><option>Bare or eroded land</option><option>Shrubland</option><option>Other</option><option>Unsure</option></select></label>
+                <label class="form-span-2">Additional context (optional)<textarea name="baseline_land_use_context" rows="3"></textarea></label>
+                <label>Evidence type *<select name="land_rights_evidence_type" required><option value="" selected disabled>Select one</option><option>Title deed</option><option>Long-term lease</option><option>Community agreement</option><option>Concession</option><option>MoU / letter of intent</option><option>None yet</option><option>Unsure</option></select></label>
+                <label>Expiry or review date<input type="date" name="land_rights_expiry_or_review_date" /></label>
+                <label class="form-span-2">Supporting document<input type="file" name="land_rights_supporting_document" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" /></label>
+                <div class="form-span-2 geo-box">
+                  <label>Geolocation</label>
+                  <p class="field-help">Upload boundary file or drop a pin with estimated hectares.</p>
+                  <input type="file" name="geolocation_file" accept=".kml,.kmz,.geojson,.shp" />
+                  <div class="map-lite">
+                    <button type="button" class="btn btn-ghost" id="drop-pin-btn">Drop a pin and estimate hectares</button>
+                    <div class="form-grid">
+                      <label>Latitude<input type="number" step="0.000001" name="geolocation_lat" /></label>
+                      <label>Longitude<input type="number" step="0.000001" name="geolocation_lng" /></label>
+                      <label>Estimated hectares<input type="number" step="0.01" name="geolocation_estimated_hectares" /></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-step" data-step="4" hidden>
+              <h4>Commercial details</h4>
+              <div class="form-grid">
+                <label>Funding model *<select name="funding_model" required><option value="" selected disabled>Select one</option><option>Self-funded</option><option>Investor-funded</option><option>Blended finance</option><option>Undecided</option><option>Unsure</option></select></label>
+                <label>Budget band *<select name="budget_band" required><option value="" selected disabled>Select one</option><option>&lt;$250k</option><option>$250k-$1m</option><option>$1m-$5m</option><option>$5m+</option><option>Unsure</option></select></label>
+                <label>Species / system (optional)
+                  <input type="text" name="species_or_system" data-default-field="species_or_system" />
+                  <button type="button" class="default-link" data-default-trigger="species_or_system">Use our default for country</button>
                 </label>
-                <label>Budget band *
-                  <select name="budget_band" required>
-                    <option value="" selected disabled>Select one</option>
-                    <option>&lt;$250k</option>
-                    <option>$250k-$1m</option>
-                    <option>$1m-$5m</option>
-                    <option>$5m+</option>
-                  </select>
-                </label>
-                <label>Species / system (optional)<input type="text" name="species_intentions" /></label>
                 <label>Expected survival rate (optional)
-                  <select name="expected_survival_rate">
-                    <option value="" selected>Select one</option>
-                    <option>&lt;60%</option>
-                    <option>60-80%</option>
-                    <option>80-95%</option>
-                  </select>
+                  <input type="text" name="expected_survival_rate" data-default-field="expected_survival_rate" />
+                  <button type="button" class="default-link" data-default-trigger="expected_survival_rate">Use our default for country</button>
                 </label>
                 <label>Establishment cost / ha (optional)
-                  <select name="establishment_cost_range">
-                    <option value="" selected>Select one</option>
-                    <option>&lt;$500</option>
-                    <option>$500-$1,500</option>
-                    <option>$1,500-$3,000</option>
-                    <option>$3,000+</option>
-                  </select>
+                  <input type="text" name="establishment_cost_per_ha" data-default-field="establishment_cost_per_ha" />
+                  <button type="button" class="default-link" data-default-trigger="establishment_cost_per_ha">Use our default for country</button>
                 </label>
                 <label>Annual maintenance / ha (optional)
-                  <select name="maintenance_cost_range">
-                    <option value="" selected>Select one</option>
-                    <option>&lt;$50</option>
-                    <option>$50-$150</option>
-                    <option>$150-$300</option>
-                    <option>$300+</option>
-                  </select>
+                  <input type="text" name="annual_maintenance_per_ha" data-default-field="annual_maintenance_per_ha" />
+                  <button type="button" class="default-link" data-default-trigger="annual_maintenance_per_ha">Use our default for country</button>
                 </label>
-                <label class="form-span-2">Decision this review should unlock *<textarea name="decision_unlock" rows="3" required></textarea></label>
-                <label class="form-span-2">Notes / additional context<textarea name="notes" rows="4"></textarea></label>
               </div>
             </div>
 
-            <div class="intake-actions">
-              <p>After submission, we review the application and invite you to a scoping call if fit is confirmed.</p>
-              <a href="mailto:miransaifi@carbonroots.earth?subject=Full%20Pre-Feasibility%20Review%20Enquiry" class="btn btn-ghost">Discuss via Email</a>
+            <div class="form-step" data-step="5" hidden>
+              <h4>Safeguards & co-benefits</h4>
+              <div class="form-grid">
+                <label>Smallholder involvement<select name="smallholder_involvement"><option value="" selected>Select one</option><option>None</option><option>Partial</option><option>Primary beneficiaries</option><option>Unsure</option></select></label>
+                <label>Jurisdictional scale<select name="jurisdictional_scale"><option value="" selected>Select one</option><option>Single site</option><option>Landscape</option><option>Sub-national jurisdiction</option><option>National</option><option>Unsure</option></select></label>
+                <fieldset class="form-span-2 checkbox-grid" data-array-name="co_benefit_emphasis"><legend>Co-benefit emphasis</legend>
+                  <label><input type="checkbox" value="Biodiversity" /> Biodiversity</label><label><input type="checkbox" value="Water" /> Water</label><label><input type="checkbox" value="Livelihoods" /> Livelihoods</label><label><input type="checkbox" value="Gender" /> Gender</label><label><input type="checkbox" value="None primary" /> None primary</label>
+                </fieldset>
+                <label id="fpic-wrap" hidden>FPIC / community engagement stage
+                  <select name="fpic_stage"><option value="" selected>Select one</option><option>Not started</option><option>Initial consultation</option><option>Consent obtained</option><option>FPIC process documented</option><option>Not applicable</option></select>
+                </label>
+                <label class="form-span-2">Permanence risk notes<textarea name="permanence_risk_notes" rows="3" placeholder="Fire, drought, conversion pressure, other threats to permanence (optional)."></textarea></label>
+                <label class="form-span-2">Decision this review should unlock *<span class="field-help">What does a 'yes' from us let you do next?</span>
+                  <select name="decision_unlock" data-other-toggle="full-decision-other" required><option value="" selected disabled>Select one</option><option>Go/no-go on site acquisition</option><option>Investment committee screening</option><option>Fundraising preparation</option><option>Partner selection</option><option>Offtake negotiation</option><option>Internal feasibility gate</option><option>Other (specify)</option></select>
+                </label>
+                <label id="full-decision-other" hidden>Please specify<input type="text" name="decision_unlock_other" /></label>
+                <label class="form-span-2">Notes / additional context<input type="text" name="notes_additional_context" /></label>
+              </div>
             </div>
-            <div class="submit-block">
-              <button type="submit" class="btn">Apply for Full Review</button>
+
+            <div class="wizard-actions">
+              <button type="button" class="btn btn-ghost" data-step-back hidden>Back</button>
+              <button type="button" class="btn" data-step-next>Next</button>
+              <button type="submit" class="btn" data-step-submit hidden>Apply for Full Review</button>
             </div>
+            <p class="email-inline"><a href="mailto:miransaifi@carbonroots.earth?subject=Full%20Pre-Feasibility%20Review%20Enquiry">Discuss via Email</a></p>
           </form>
         </div>
       </section>

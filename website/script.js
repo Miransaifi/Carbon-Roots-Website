@@ -613,24 +613,238 @@ const initExampleOutputCharts = async () => {
 
 initExampleOutputCharts();
 
-const vaguePatterns = [/^asap$/i, /^not\s+sure$/i, /^unknown$/i, /^improve$/i, /^n\/?a$/i];
-['#snapshot-form', '#full-review-form'].forEach((formSelector) => {
-  const form = document.querySelector(formSelector);
+
+const COUNTRY_LIST = [
+  ['AF','Afghanistan'],['AL','Albania'],['DZ','Algeria'],['AD','Andorra'],['AO','Angola'],['AG','Antigua and Barbuda'],['AR','Argentina'],['AM','Armenia'],['AU','Australia'],['AT','Austria'],['AZ','Azerbaijan'],['BS','Bahamas'],['BH','Bahrain'],['BD','Bangladesh'],['BB','Barbados'],['BY','Belarus'],['BE','Belgium'],['BZ','Belize'],['BJ','Benin'],['BT','Bhutan'],['BO','Bolivia'],['BA','Bosnia and Herzegovina'],['BW','Botswana'],['BR','Brazil'],['BN','Brunei'],['BG','Bulgaria'],['BF','Burkina Faso'],['BI','Burundi'],['CV','Cabo Verde'],['KH','Cambodia'],['CM','Cameroon'],['CA','Canada'],['CF','Central African Republic'],['TD','Chad'],['CL','Chile'],['CN','China'],['CO','Colombia'],['KM','Comoros'],['CG','Congo'],['CR','Costa Rica'],['CI','Côte d’Ivoire'],['HR','Croatia'],['CU','Cuba'],['CY','Cyprus'],['CZ','Czechia'],['CD','DR Congo'],['DK','Denmark'],['DJ','Djibouti'],['DM','Dominica'],['DO','Dominican Republic'],['EC','Ecuador'],['EG','Egypt'],['SV','El Salvador'],['GQ','Equatorial Guinea'],['ER','Eritrea'],['EE','Estonia'],['SZ','Eswatini'],['ET','Ethiopia'],['FJ','Fiji'],['FI','Finland'],['FR','France'],['GA','Gabon'],['GM','Gambia'],['GE','Georgia'],['DE','Germany'],['GH','Ghana'],['GR','Greece'],['GD','Grenada'],['GT','Guatemala'],['GN','Guinea'],['GW','Guinea-Bissau'],['GY','Guyana'],['HT','Haiti'],['HN','Honduras'],['HU','Hungary'],['IS','Iceland'],['IN','India'],['ID','Indonesia'],['IR','Iran'],['IQ','Iraq'],['IE','Ireland'],['IL','Israel'],['IT','Italy'],['JM','Jamaica'],['JP','Japan'],['JO','Jordan'],['KZ','Kazakhstan'],['KE','Kenya'],['KI','Kiribati'],['KW','Kuwait'],['KG','Kyrgyzstan'],['LA','Laos'],['LV','Latvia'],['LB','Lebanon'],['LS','Lesotho'],['LR','Liberia'],['LY','Libya'],['LI','Liechtenstein'],['LT','Lithuania'],['LU','Luxembourg'],['MG','Madagascar'],['MW','Malawi'],['MY','Malaysia'],['MV','Maldives'],['ML','Mali'],['MT','Malta'],['MH','Marshall Islands'],['MR','Mauritania'],['MU','Mauritius'],['MX','Mexico'],['FM','Micronesia'],['MD','Moldova'],['MC','Monaco'],['MN','Mongolia'],['ME','Montenegro'],['MA','Morocco'],['MZ','Mozambique'],['MM','Myanmar'],['NA','Namibia'],['NR','Nauru'],['NP','Nepal'],['NL','Netherlands'],['NZ','New Zealand'],['NI','Nicaragua'],['NE','Niger'],['NG','Nigeria'],['KP','North Korea'],['MK','North Macedonia'],['NO','Norway'],['OM','Oman'],['PK','Pakistan'],['PW','Palau'],['PA','Panama'],['PG','Papua New Guinea'],['PY','Paraguay'],['PE','Peru'],['PH','Philippines'],['PL','Poland'],['PT','Portugal'],['QA','Qatar'],['RO','Romania'],['RU','Russia'],['RW','Rwanda'],['KN','Saint Kitts and Nevis'],['LC','Saint Lucia'],['VC','Saint Vincent and the Grenadines'],['WS','Samoa'],['SM','San Marino'],['ST','Sao Tome and Principe'],['SA','Saudi Arabia'],['SN','Senegal'],['RS','Serbia'],['SC','Seychelles'],['SL','Sierra Leone'],['SG','Singapore'],['SK','Slovakia'],['SI','Slovenia'],['SB','Solomon Islands'],['SO','Somalia'],['ZA','South Africa'],['KR','South Korea'],['SS','South Sudan'],['ES','Spain'],['LK','Sri Lanka'],['SD','Sudan'],['SR','Suriname'],['SE','Sweden'],['CH','Switzerland'],['SY','Syria'],['TJ','Tajikistan'],['TZ','Tanzania'],['TH','Thailand'],['TL','Timor-Leste'],['TG','Togo'],['TO','Tonga'],['TT','Trinidad and Tobago'],['TN','Tunisia'],['TR','Turkey'],['TM','Turkmenistan'],['TV','Tuvalu'],['UG','Uganda'],['UA','Ukraine'],['AE','United Arab Emirates'],['GB','United Kingdom'],['US','United States'],['UY','Uruguay'],['UZ','Uzbekistan'],['VU','Vanuatu'],['VE','Venezuela'],['VN','Vietnam'],['YE','Yemen'],['ZM','Zambia'],['ZW','Zimbabwe']
+];
+
+const initCountrySelects = () => {
+  document.querySelectorAll('[data-country-select]').forEach((select) => {
+    select.innerHTML = '<option value="" selected disabled>Select a country</option>';
+    COUNTRY_LIST.forEach(([code, name]) => {
+      const o = document.createElement('option');
+      o.value = code;
+      o.textContent = name;
+      select.appendChild(o);
+    });
+    const unsure = document.createElement('option');
+    unsure.value = 'UNSURE';
+    unsure.textContent = 'Unsure';
+    select.appendChild(unsure);
+  });
+};
+
+const isEmailValid = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim());
+const getCurrentYear = () => new Date().getFullYear();
+
+const initFormWizard = (form, totalSteps) => {
+  if (!form) return;
+  const steps = Array.from(form.querySelectorAll('.form-step'));
+  const backBtn = form.querySelector('[data-step-back]');
+  const nextBtn = form.querySelector('[data-step-next]');
+  const submitBtn = form.querySelector('[data-step-submit]');
+  const currentNode = form.querySelector('[data-step-current]');
+  const fillNode = form.querySelector('[data-progress-fill]');
+  let current = 0;
+
+  const validateStep = () => {
+    const fields = steps[current].querySelectorAll('input,select,textarea');
+    for (const f of fields) {
+      if (!f.checkValidity()) { f.reportValidity(); return false; }
+    }
+    return true;
+  };
+
+  const render = () => {
+    steps.forEach((s, i) => (s.hidden = i !== current));
+    if (currentNode) currentNode.textContent = String(current + 1);
+    if (fillNode) fillNode.style.width = `${((current + 1) / totalSteps) * 100}%`;
+    if (backBtn) backBtn.hidden = current === 0;
+    if (nextBtn) nextBtn.hidden = current === totalSteps - 1;
+    if (submitBtn) submitBtn.hidden = current !== totalSteps - 1;
+  };
+
+  backBtn?.addEventListener('click', () => { current = Math.max(0, current - 1); render(); });
+  nextBtn?.addEventListener('click', () => { if (!validateStep()) return; current = Math.min(totalSteps - 1, current + 1); render(); });
+  render();
+};
+
+const collectPayload = (form) => {
+  const payload = {};
+  const gaps = [];
+  const fields = form.querySelectorAll('input[name],select[name],textarea[name]');
+  fields.forEach((f) => {
+    const { name, type } = f;
+    if (!name || name === 'payload_json' || name === 'flagged_gaps') return;
+    if (type === 'file') {
+      const file = f.files?.[0];
+      payload[name] = file ? `upload://${file.name}` : '';
+      return;
+    }
+    if (type === 'checkbox') return;
+    let v = String(f.value || '').trim();
+    if (v === 'Unsure' || v === 'UNSURE' || v === 'Unknown') gaps.push(name);
+    payload[name] = v;
+  });
+  form.querySelectorAll('[data-array-name]').forEach((wrap) => {
+    const key = wrap.getAttribute('data-array-name');
+    payload[key] = Array.from(wrap.querySelectorAll('input[type="checkbox"]:checked')).map((c) => c.value);
+  });
+  return { payload, gaps };
+};
+
+const attachOtherToggle = () => {
+  document.querySelectorAll('[data-other-toggle]').forEach((select) => {
+    const target = document.getElementById(select.getAttribute('data-other-toggle'));
+    const input = target?.querySelector('input');
+    const update = () => {
+      const on = select.value === 'Other (specify)';
+      if (target) target.hidden = !on;
+      if (input) input.required = on;
+    };
+    select.addEventListener('change', update);
+    update();
+  });
+};
+
+const attachFullReviewLogic = () => {
+  const form = document.querySelector('#full-review-form');
   if (!form) return;
 
-  form.addEventListener('submit', (event) => {
-    const fields = form.querySelectorAll('input[type="text"], textarea');
-    for (const field of fields) {
-      if (!field.required) continue;
-      const value = String(field.value || '').trim();
-      if (vaguePatterns.some((pattern) => pattern.test(value))) {
-        event.preventDefault();
-        field.setCustomValidity('Please provide a specific answer.');
-        field.reportValidity();
-        field.focus();
-        return;
+  const tenure = form.querySelector('#full-tenure');
+
+  const startYearInput = form.querySelector('[name="start_year_of_activities"]');
+  if (startYearInput) startYearInput.max = String(getCurrentYear() + 10);
+
+  const startYearUnsure = form.querySelector('[name="start_year_unsure"]');
+  const syncStartYearRequired = () => {
+    if (!startYearInput) return;
+    const unsure = !!startYearUnsure?.checked;
+    startYearInput.required = !unsure;
+    if (unsure) startYearInput.value = '';
+  };
+  startYearUnsure?.addEventListener('change', syncStartYearRequired);
+  syncStartYearRequired();
+
+
+  const fpicWrap = form.querySelector('#fpic-wrap');
+  const fpicSelect = fpicWrap?.querySelector('select');
+  const updateFpic = () => {
+    const show = tenure?.value === 'Community or customary';
+    if (fpicWrap) fpicWrap.hidden = !show;
+    if (fpicSelect) fpicSelect.required = !!show;
+  };
+  tenure?.addEventListener('change', updateFpic);
+  updateFpic();
+
+  const countrySelect = form.querySelector('select[name="country"]');
+  const defaultButtons = form.querySelectorAll('[data-default-trigger]');
+  const updateDefaultButtons = () => {
+    const enabled = !!countrySelect?.value;
+    const countryLabel = countrySelect?.selectedOptions?.[0]?.textContent || 'country';
+    defaultButtons.forEach((btn) => {
+      btn.disabled = !enabled;
+      btn.title = enabled ? '' : 'Select a country first.';
+      btn.textContent = `Use our default for ${enabled ? countryLabel : 'Country'}`;
+    });
+  };
+  countrySelect?.addEventListener('change', updateDefaultButtons);
+  updateDefaultButtons();
+
+  defaultButtons.forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const field = btn.getAttribute('data-default-trigger');
+      const country = countrySelect?.value;
+      if (!country) return;
+      try {
+        const res = await fetch(`/api/defaults?country=${encodeURIComponent(country)}&field=${encodeURIComponent(field)}`);
+        const data = await res.json().catch(() => ({}));
+        const target = form.querySelector(`[name="${field}"]`);
+        if (target) {
+          target.value = data.value || 'Default applied';
+          target.classList.add('using-default');
+        }
+      } catch {
+        const target = form.querySelector(`[name="${field}"]`);
+        if (target) {
+          target.value = 'Default applied';
+          target.classList.add('using-default');
+        }
       }
-      field.setCustomValidity('');
-    }
+    });
   });
-});
+
+  const optionalKeys = ['species_or_system','expected_survival_rate','establishment_cost_per_ha','annual_maintenance_per_ha','smallholder_involvement','jurisdictional_scale','permanence_risk_notes','co_benefit_emphasis','geolocation_lat','geolocation_lng','geolocation_estimated_hectares','geolocation_file'];
+  const meter = form.querySelector('#review-confidence');
+  const refreshConfidence = () => {
+    let done = 0;
+    optionalKeys.forEach((k) => {
+      const node = form.querySelector(`[name="${k}"]`);
+      if (!node) return;
+      if (node.type === 'file' ? node.files?.length : String(node.value || '').trim()) done += 1;
+    });
+    const pct = Math.round((done / optionalKeys.length) * 100);
+    if (meter) meter.textContent = `${pct}%`;
+  };
+  form.addEventListener('input', refreshConfidence);
+  form.addEventListener('change', refreshConfidence);
+  refreshConfidence();
+
+  const saveLink = document.querySelector('#save-resume-link');
+  saveLink?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const email = form.querySelector('[name="email"]')?.value?.trim();
+    if (!isEmailValid(email)) {
+      alert('Enter a valid email first.');
+      return;
+    }
+    localStorage.setItem('full-review-draft', JSON.stringify({ ts: Date.now(), email, values: Object.fromEntries(new FormData(form).entries()) }));
+    alert('Draft saved. Resume link email is stubbed and should be wired server-side.');
+  });
+};
+
+const validateFiles = (form) => {
+  const checks = [
+    ['land_rights_supporting_document', 10 * 1024 * 1024, ['pdf','jpg','jpeg','png','doc','docx']],
+    ['geolocation_file', 25 * 1024 * 1024, ['kml','kmz','geojson','shp']]
+  ];
+  for (const [name, max, exts] of checks) {
+    const node = form.querySelector(`[name="${name}"]`);
+    const f = node?.files?.[0];
+    if (!f) continue;
+    const ext = (f.name.split('.').pop() || '').toLowerCase();
+    if (!exts.includes(ext) || f.size > max) {
+      alert(`Invalid file for ${name}.`);
+      return false;
+    }
+  }
+  return true;
+};
+
+const bindSubmissions = () => {
+  ['#snapshot-form', '#full-review-form'].forEach((sel) => {
+    const form = document.querySelector(sel);
+    if (!form) return;
+    form.addEventListener('submit', (event) => {
+      const email = form.querySelector('[name="email"]')?.value;
+      const land = Number(form.querySelector('[name="land_area_ha"]')?.value || 0);
+      const startYear = Number(form.querySelector('[name="start_year_of_activities"]')?.value || 0);
+      if (!isEmailValid(email)) { event.preventDefault(); alert('Please provide a valid email.'); return; }
+      if (!(land > 0 && land <= 1000000)) { event.preventDefault(); alert('Land area must be > 0 and <= 1,000,000.'); return; }
+      if (startYear && (startYear < 2020 || startYear > getCurrentYear() + 10)) { event.preventDefault(); alert('Start year is out of range.'); return; }
+      if (!validateFiles(form)) { event.preventDefault(); return; }
+      const { payload, gaps } = collectPayload(form);
+      const p = form.querySelector('[name="payload_json"]');
+      const g = form.querySelector('[name="flagged_gaps"]');
+      if (p) p.value = JSON.stringify(payload);
+      if (g) g.value = JSON.stringify(gaps);
+    });
+  });
+};
+
+initCountrySelects();
+attachOtherToggle();
+initFormWizard(document.querySelector('#snapshot-form'), 3);
+initFormWizard(document.querySelector('#full-review-form'), 5);
+attachFullReviewLogic();
+bindSubmissions();

@@ -706,6 +706,29 @@ section[id] {
   margin-top: 0.45rem;
 }
 
+
+.form-intro { color:#4f5851; margin-bottom:0.8rem; }
+.form-progress { margin:0.8rem 0 1rem; }
+.form-progress-label { font-size:0.88rem; color:#5e665f; display:block; margin-bottom:0.4rem; }
+.progress-track { height:8px; background:#e3e8e1; border-radius:999px; overflow:hidden; }
+.progress-fill { height:100%; width:0; background:var(--gold); transition:width .2s ease; }
+.form-step { animation: fadeIn 0.18s ease; }
+.field-help { display:block; font-size:0.78rem; color:#5e665f; margin:0.2rem 0 0.3rem; }
+.checkbox-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; }
+.checkbox-grid label { font-weight:500; flex-direction:row; align-items:center; gap:0.45rem; }
+.default-link { margin-top:0.35rem; border:0; background:none; color:#44624b; text-decoration:underline; cursor:pointer; padding:0; font-size:0.82rem; text-align:left; }
+.default-link[disabled] { opacity:0.5; cursor:not-allowed; }
+.using-default { outline:2px solid rgba(144,161,145,.55); }
+.confidence-meter { margin:0.2rem 0 0.8rem; font-size:0.9rem; color:#425449; }
+.confidence-meter small { display:block; color:#5e665f; }
+.save-resume { margin:0 0 0.6rem; font-size:0.9rem; }
+.email-inline { margin:0.55rem 0 0; font-size:0.88rem; }
+.geo-box { border:1px dashed var(--border); border-radius:10px; padding:0.75rem; }
+.map-lite { margin-top:0.65rem; }
+fieldset.checkbox-grid { border:1px solid var(--border); border-radius:10px; padding:0.7rem; }
+fieldset.checkbox-grid legend { font-weight:600; font-size:0.92rem; }
+@media (max-width:820px){ .checkbox-grid { grid-template-columns:1fr; } }
+
 .intake-helper {
   margin: 1rem 0 0;
   color: #4f5851;
@@ -926,3 +949,5 @@ section[id] {
   }
   .hero { padding: 5.2rem 0 4.5rem; }
 }
+
+.inline-check { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.82rem; color:#4f5851; margin-top:0.25rem; }
