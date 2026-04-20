@@ -463,12 +463,14 @@
                   </select>
                 </label>
                 <label data-pathway="arr">ARR Activity Type *
+                  <span class="field-help">Select the ARR activity that best fits this project.</span>
                   <select name="arr_activity_type" data-required>
                     <option value="" selected disabled>Select one</option>
                     <option>Afforestation</option><option>Reforestation</option><option>Assisted Natural Regeneration</option><option>Agroforestry</option><option>Mixed</option><option>Unsure</option>
                   </select>
                 </label>
                 <label data-pathway="biochar">Biochar Project Type *
+                  <span class="field-help">Select the biochar project structure.</span>
                   <select name="biochar_project_type" data-required>
                     <option value="" selected disabled>Select one</option>
                     <option>New production facility</option><option>Retrofit / expansion</option><option>Aggregated distributed units</option><option>Other</option><option>Unsure</option>
@@ -595,8 +597,8 @@
               <h4>About your project</h4>
               <div class="form-grid">
                 <label>Project pathway *<span class="field-help">Select Biochar to see biochar-specific inputs.</span><select name="project_pathway" data-pathway-select required><option value="" selected disabled>Select one</option><option>ARR</option><option>Biochar</option><option>Unsure</option></select></label>
-                <label data-pathway="arr">ARR Activity Type *<select name="arr_activity_type" data-required><option value="" selected disabled>Select one</option><option>Afforestation</option><option>Reforestation</option><option>Assisted Natural Regeneration</option><option>Agroforestry</option><option>Mixed</option><option>Unsure</option></select></label>
-                <label data-pathway="biochar">Biochar Project Type *<select name="biochar_project_type" data-required><option value="" selected disabled>Select one</option><option>New production facility</option><option>Retrofit / expansion</option><option>Aggregated distributed units</option><option>Other</option><option>Unsure</option></select></label>
+                <label data-pathway="arr">ARR Activity Type *<span class="field-help">Select the ARR activity that best fits this project.</span><select name="arr_activity_type" data-required><option value="" selected disabled>Select one</option><option>Afforestation</option><option>Reforestation</option><option>Assisted Natural Regeneration</option><option>Agroforestry</option><option>Mixed</option><option>Unsure</option></select></label>
+                <label data-pathway="biochar">Biochar Project Type *<span class="field-help">Select the biochar project structure.</span><select name="biochar_project_type" data-required><option value="" selected disabled>Select one</option><option>New production facility</option><option>Retrofit / expansion</option><option>Aggregated distributed units</option><option>Other</option><option>Unsure</option></select></label>
                 <label>Country *<select name="country" data-country-select required></select></label>
                 <label>Region<input type="text" name="region" placeholder="State, province, or area (optional)" /></label>
                 <label data-pathway="arr">Land Area (ha) *<input type="number" name="land_area_ha" min="0.01" max="1000000" step="0.01" data-required /></label>
