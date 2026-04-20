@@ -453,10 +453,24 @@
             <div class="form-step" data-step="2" hidden>
               <h4>About your project</h4>
               <div class="form-grid">
-                <label>Nature-based pathway *
-                  <select name="arr_activity_type" required>
+                <label>Project pathway *
+                  <select name="project_pathway" data-pathway-select required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>ARR</option>
+                    <option>Biochar</option>
+                    <option>Unsure</option>
+                  </select>
+                </label>
+                <label data-pathway="arr">ARR Activity Type *
+                  <select name="arr_activity_type" data-required>
                     <option value="" selected disabled>Select one</option>
                     <option>Afforestation</option><option>Reforestation</option><option>Assisted Natural Regeneration</option><option>Agroforestry</option><option>Mixed</option><option>Unsure</option>
+                  </select>
+                </label>
+                <label data-pathway="biochar">Biochar Project Type *
+                  <select name="biochar_project_type" data-required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>New production facility</option><option>Retrofit / expansion</option><option>Aggregated distributed units</option><option>Other</option><option>Unsure</option>
                   </select>
                 </label>
                 <label>Country *
@@ -465,11 +479,11 @@
                 <label>Region
                   <input type="text" name="region" placeholder="State, province, or area (optional)" />
                 </label>
-                <label>Land Area (ha) *
-                  <input type="number" name="land_area_ha" min="0.01" max="1000000" step="0.01" required />
+                <label data-pathway="arr">Land Area (ha) *
+                  <input type="number" name="land_area_ha" min="0.01" max="1000000" step="0.01" data-required />
                 </label>
-                <label>Prior land cover *<span class="field-help">When did this land last have meaningful tree cover?</span>
-                  <select name="prior_land_cover" required>
+                <label data-pathway="arr">Prior land cover *<span class="field-help">When did this land last have meaningful tree cover?</span>
+                  <select name="prior_land_cover" data-required>
                     <option value="" selected disabled>Select one</option>
                     <option>Never forested, or more than 50 years since forest cover</option>
                     <option>10–50 years since forest cover</option>
@@ -479,10 +493,31 @@
                     <option>Unsure</option>
                   </select>
                 </label>
-                <label>Land Tenure Status *<span class="field-help">Closest match is fine, we'll confirm in review.</span>
-                  <select name="land_tenure_status" required>
+                <label data-pathway="arr">Land Tenure Status *<span class="field-help">Closest match is fine, we'll confirm in review.</span>
+                  <select name="land_tenure_status" data-required>
                     <option value="" selected disabled>Select one</option>
                     <option>Freehold-owned</option><option>Long lease (more than 30 years)</option><option>Short lease (less than 30 years)</option><option>Community or customary</option><option>Concession</option><option>Not yet secured</option><option>Unsure</option>
+                  </select>
+                </label>
+                <label data-pathway="biochar">Feedstock type *
+                  <select name="biochar_feedstock_type" data-required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Agricultural residues</option><option>Forestry residues</option><option>Shells / husks</option><option>Manure</option><option>Mixed / other</option><option>Unsure</option>
+                  </select>
+                </label>
+                <label data-pathway="biochar">Annual feedstock throughput (t/yr) *
+                  <input type="number" name="biochar_feedstock_throughput_tpy" min="1" step="1" data-required />
+                </label>
+                <label data-pathway="biochar">Technology type *
+                  <select name="biochar_technology_type" data-required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Pyrolysis</option><option>Gasification</option><option>Other</option><option>Unsure</option>
+                  </select>
+                </label>
+                <label data-pathway="biochar">Feedstock security *
+                  <select name="biochar_feedstock_security" data-required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Contracted</option><option>Informal supply</option><option>Seasonal</option><option>Unknown</option>
                   </select>
                 </label>
                 <label>Project Stage *
@@ -558,28 +593,41 @@
             <div class="form-step" data-step="2" hidden>
               <h4>About your project</h4>
               <div class="form-grid">
-                <label>Nature-based pathway *<select name="arr_activity_type" required><option value="" selected disabled>Select one</option><option>Afforestation</option><option>Reforestation</option><option>Assisted Natural Regeneration</option><option>Agroforestry</option><option>Mixed</option><option>Unsure</option></select></label>
+                <label>Project pathway *<select name="project_pathway" data-pathway-select required><option value="" selected disabled>Select one</option><option>ARR</option><option>Biochar</option><option>Unsure</option></select></label>
+                <label data-pathway="arr">ARR Activity Type *<select name="arr_activity_type" data-required><option value="" selected disabled>Select one</option><option>Afforestation</option><option>Reforestation</option><option>Assisted Natural Regeneration</option><option>Agroforestry</option><option>Mixed</option><option>Unsure</option></select></label>
+                <label data-pathway="biochar">Biochar Project Type *<select name="biochar_project_type" data-required><option value="" selected disabled>Select one</option><option>New production facility</option><option>Retrofit / expansion</option><option>Aggregated distributed units</option><option>Other</option><option>Unsure</option></select></label>
                 <label>Country *<select name="country" data-country-select required></select></label>
                 <label>Region<input type="text" name="region" placeholder="State, province, or area (optional)" /></label>
-                <label>Land Area (ha) *<input type="number" name="land_area_ha" min="0.01" max="1000000" step="0.01" required /></label>
-                <label>Prior land cover *<span class="field-help">When did this land last have meaningful tree cover?</span><select name="prior_land_cover" required><option value="" selected disabled>Select one</option><option>Never forested, or more than 50 years since forest cover</option><option>10–50 years since forest cover</option><option>5–10 years since forest cover</option><option>Less than 5 years since forest cover</option><option>Currently has some tree cover</option><option>Unsure</option></select></label>
+                <label data-pathway="arr">Land Area (ha) *<input type="number" name="land_area_ha" min="0.01" max="1000000" step="0.01" data-required /></label>
+                <label data-pathway="arr">Prior land cover *<span class="field-help">When did this land last have meaningful tree cover?</span><select name="prior_land_cover" data-required><option value="" selected disabled>Select one</option><option>Never forested, or more than 50 years since forest cover</option><option>10–50 years since forest cover</option><option>5–10 years since forest cover</option><option>Less than 5 years since forest cover</option><option>Currently has some tree cover</option><option>Unsure</option></select></label>
                 <label>Project Stage *<select name="project_stage" required><option value="" selected disabled>Select one</option><option>Concept</option><option>Pre-feasibility</option><option>Feasibility</option><option>Financing</option><option>Operational</option><option>Unsure</option></select></label>
                 <label>Decision Timeline *<select name="decision_timeline" required><option value="" selected disabled>Select one</option><option>Less than 3 months</option><option>3–6 months</option><option>6–12 months</option><option>More than 12 months</option><option>Unknown</option></select></label>
-                <label>Land Tenure Status *<span class="field-help">Closest match is fine, we'll confirm in review.</span><select name="land_tenure_status" id="full-tenure" required><option value="" selected disabled>Select one</option><option>Freehold-owned</option><option>Long lease (more than 30 years)</option><option>Short lease (less than 30 years)</option><option>Community or customary</option><option>Concession</option><option>Not yet secured</option><option>Unsure</option></select></label>
+                <label data-pathway="arr">Land Tenure Status *<span class="field-help">Closest match is fine, we'll confirm in review.</span><select name="land_tenure_status" id="full-tenure" data-required><option value="" selected disabled>Select one</option><option>Freehold-owned</option><option>Long lease (more than 30 years)</option><option>Short lease (less than 30 years)</option><option>Community or customary</option><option>Concession</option><option>Not yet secured</option><option>Unsure</option></select></label>
+                <label data-pathway="biochar">Feedstock sourcing model *<select name="biochar_feedstock_sourcing_model" data-required><option value="" selected disabled>Select one</option><option>Owned supply</option><option>Contracted suppliers</option><option>Aggregated suppliers</option><option>Spot market</option><option>Unsure</option></select></label>
               </div>
             </div>
 
             <div class="form-step" data-step="3" hidden>
               <h4>Site & biophysical</h4>
               <div class="form-grid">
-                <label>Planting approach *<select name="planting_approach" required><option value="" selected disabled>Select one</option><option>Monoculture plantation</option><option>Mixed native species</option><option>Mixed native + exotic species</option><option>ANR with enrichment planting</option><option>Agroforestry</option><option>Unsure</option></select></label>
-                <label>Start year of activities *<input type="number" name="start_year_of_activities" min="2020" required /><span class="field-help">If unknown, tick Unsure below.</span><span class="inline-check"><input type="checkbox" name="start_year_unsure" /> Unsure</span></label>
-                <label>Planned crediting period *<select name="planned_crediting_period" required><option value="" selected disabled>Select one</option><option>20 years</option><option>30 years</option><option>40 years</option><option>60 years</option><option>100 years</option><option>Unsure</option></select></label>
-                <label>Baseline land use *<select name="baseline_land_use" required><option value="" selected disabled>Select one</option><option>Degraded cropland</option><option>Active cropland</option><option>Pasture</option><option>Degraded grassland</option><option>Bare or eroded land</option><option>Shrubland</option><option>Other</option><option>Unsure</option></select></label>
-                <label class="form-span-2">Additional context (optional)<textarea name="baseline_land_use_context" rows="3"></textarea></label>
-                <label>Evidence type *<select name="land_rights_evidence_type" required><option value="" selected disabled>Select one</option><option>Title deed</option><option>Long-term lease</option><option>Community agreement</option><option>Concession</option><option>MoU / letter of intent</option><option>None yet</option><option>Unsure</option></select></label>
-                <label>Expiry or review date<input type="date" name="land_rights_expiry_or_review_date" /></label>
-                <label class="form-span-2">Supporting document<input type="file" name="land_rights_supporting_document" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" /></label>
+                <label data-pathway="arr">Planting approach *<select name="planting_approach" data-required><option value="" selected disabled>Select one</option><option>Monoculture plantation</option><option>Mixed native species</option><option>Mixed native + exotic species</option><option>ANR with enrichment planting</option><option>Agroforestry</option><option>Unsure</option></select></label>
+                <label data-pathway="arr">Start year of activities *<input type="number" name="start_year_of_activities" min="2020" data-required /><span class="field-help">If unknown, tick Unsure below.</span><span class="inline-check"><input type="checkbox" name="start_year_unsure" /> Unsure</span></label>
+                <label data-pathway="arr">Planned crediting period *<select name="planned_crediting_period" data-required><option value="" selected disabled>Select one</option><option>20 years</option><option>30 years</option><option>40 years</option><option>60 years</option><option>100 years</option><option>Unsure</option></select></label>
+                <label data-pathway="arr">Baseline land use *<select name="baseline_land_use" data-required><option value="" selected disabled>Select one</option><option>Degraded cropland</option><option>Active cropland</option><option>Pasture</option><option>Degraded grassland</option><option>Bare or eroded land</option><option>Shrubland</option><option>Other</option><option>Unsure</option></select></label>
+                <label class="form-span-2" data-pathway="arr">Additional context (optional)<textarea name="baseline_land_use_context" rows="3"></textarea></label>
+                <label data-pathway="arr">Evidence type *<select name="land_rights_evidence_type" data-required><option value="" selected disabled>Select one</option><option>Title deed</option><option>Long-term lease</option><option>Community agreement</option><option>Concession</option><option>MoU / letter of intent</option><option>None yet</option><option>Unsure</option></select></label>
+                <label data-pathway="arr">Expiry or review date<input type="date" name="land_rights_expiry_or_review_date" /></label>
+                <label class="form-span-2" data-pathway="arr">Supporting document<input type="file" name="land_rights_supporting_document" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" /></label>
+
+                <label data-pathway="biochar">Feedstock type *<select name="biochar_feedstock_type" data-required><option value="" selected disabled>Select one</option><option>Agricultural residues</option><option>Forestry residues</option><option>Shells / husks</option><option>Manure</option><option>Mixed / other</option><option>Unsure</option></select></label>
+                <label data-pathway="biochar">Annual feedstock throughput (t/yr) *<input type="number" name="biochar_feedstock_throughput_tpy" min="1" step="1" data-required /></label>
+                <label data-pathway="biochar">Technology type *<select name="biochar_technology_type" data-required><option value="" selected disabled>Select one</option><option>Pyrolysis</option><option>Gasification</option><option>Other</option><option>Unsure</option></select></label>
+                <label data-pathway="biochar">Nameplate capacity (t/yr) *<input type="number" name="biochar_nameplate_capacity_tpy" min="1" step="1" data-required /></label>
+                <label data-pathway="biochar">Expected uptime (%) *<input type="number" name="biochar_uptime_percent" min="1" max="100" step="1" data-required /></label>
+                <label data-pathway="biochar">Commissioning/start year *<input type="number" name="biochar_start_year" min="2020" data-required /></label>
+                <label data-pathway="biochar">Baseline feedstock counterfactual *<select name="biochar_baseline_counterfactual" data-required><option value="" selected disabled>Select one</option><option>Open burning</option><option>Decay / unmanaged decomposition</option><option>Alternative productive use</option><option>Unknown</option></select></label>
+                <label data-pathway="biochar">MRV readiness level *<select name="biochar_mrv_readiness" data-required><option value="" selected disabled>Select one</option><option>Low</option><option>Medium</option><option>High</option></select></label>
+
                 <div class="form-span-2 geo-box">
                   <label>Geolocation</label>
                   <p class="field-help">Upload boundary file or drop a pin with estimated hectares.</p>
@@ -601,21 +649,33 @@
               <div class="form-grid">
                 <label>Funding model *<select name="funding_model" required><option value="" selected disabled>Select one</option><option>Self-funded</option><option>Investor-funded</option><option>Blended finance</option><option>Undecided</option><option>Unsure</option></select></label>
                 <label>Budget band *<select name="budget_band" required><option value="" selected disabled>Select one</option><option>&lt;$250k</option><option>$250k-$1m</option><option>$1m-$5m</option><option>$5m+</option><option>Unsure</option></select></label>
-                <label>Species / system (optional)
+                <label data-pathway="arr">Species / system (optional)
                   <input type="text" name="species_or_system" data-default-field="species_or_system" />
                   <button type="button" class="default-link" data-default-trigger="species_or_system">Use our default for country</button>
                 </label>
-                <label>Expected survival rate (optional)
+                <label data-pathway="arr">Expected survival rate (optional)
                   <input type="text" name="expected_survival_rate" data-default-field="expected_survival_rate" />
                   <button type="button" class="default-link" data-default-trigger="expected_survival_rate">Use our default for country</button>
                 </label>
-                <label>Establishment cost / ha (optional)
+                <label data-pathway="arr">Establishment cost / ha (optional)
                   <input type="text" name="establishment_cost_per_ha" data-default-field="establishment_cost_per_ha" />
                   <button type="button" class="default-link" data-default-trigger="establishment_cost_per_ha">Use our default for country</button>
                 </label>
-                <label>Annual maintenance / ha (optional)
+                <label data-pathway="arr">Annual maintenance / ha (optional)
                   <input type="text" name="annual_maintenance_per_ha" data-default-field="annual_maintenance_per_ha" />
                   <button type="button" class="default-link" data-default-trigger="annual_maintenance_per_ha">Use our default for country</button>
+                </label>
+                <label data-pathway="biochar">Estimated CAPEX range (optional)
+                  <input type="text" name="biochar_capex_range" />
+                </label>
+                <label data-pathway="biochar">Estimated OPEX range (optional)
+                  <input type="text" name="biochar_opex_range" />
+                </label>
+                <label data-pathway="biochar">Primary offtake / end use (optional)
+                  <input type="text" name="biochar_offtake_end_use" />
+                </label>
+                <label data-pathway="biochar">Quality standard intent (optional)
+                  <select name="biochar_quality_standard_intent"><option value="" selected>Select one</option><option>IBI aligned</option><option>EBC aligned</option><option>Internal QA only</option><option>Unsure</option></select>
                 </label>
               </div>
             </div>

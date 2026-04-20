@@ -707,6 +707,37 @@ const attachOtherToggle = () => {
   });
 };
 
+
+const attachPathwayLogic = (form) => {
+  if (!form) return;
+  const pathwaySelect = form.querySelector('[data-pathway-select]');
+  if (!pathwaySelect) return;
+
+  const conditioned = Array.from(form.querySelectorAll('[data-pathway]'));
+  const refresh = () => {
+    const selected = pathwaySelect.value;
+    conditioned.forEach((el) => {
+      const mode = el.getAttribute('data-pathway');
+      const show = !selected || selected === 'Unsure' ? true : mode === selected.toLowerCase();
+      el.hidden = !show;
+
+      el.querySelectorAll('[data-required]').forEach((field) => {
+        field.required = show;
+      });
+
+      if (!show) {
+        el.querySelectorAll('input, select, textarea').forEach((field) => {
+          if (field.type === 'checkbox' || field.type === 'radio') field.checked = false;
+          else field.value = '';
+        });
+      }
+    });
+  };
+
+  pathwaySelect.addEventListener('change', refresh);
+  refresh();
+};
+
 const attachFullReviewLogic = () => {
   const form = document.querySelector('#full-review-form');
   if (!form) return;
@@ -774,7 +805,7 @@ const attachFullReviewLogic = () => {
     });
   });
 
-  const optionalKeys = ['species_or_system','expected_survival_rate','establishment_cost_per_ha','annual_maintenance_per_ha','smallholder_involvement','jurisdictional_scale','permanence_risk_notes','co_benefit_emphasis','geolocation_lat','geolocation_lng','geolocation_estimated_hectares','geolocation_file'];
+  const optionalKeys = ['species_or_system','expected_survival_rate','establishment_cost_per_ha','annual_maintenance_per_ha','biochar_capex_range','biochar_opex_range','biochar_offtake_end_use','biochar_quality_standard_intent','smallholder_involvement','jurisdictional_scale','permanence_risk_notes','co_benefit_emphasis','geolocation_lat','geolocation_lng','geolocation_estimated_hectares','geolocation_file'];
   const meter = form.querySelector('#review-confidence');
   const refreshConfidence = () => {
     let done = 0;
@@ -827,11 +858,14 @@ const bindSubmissions = () => {
     if (!form) return;
     form.addEventListener('submit', (event) => {
       const email = form.querySelector('[name="email"]')?.value;
-      const land = Number(form.querySelector('[name="land_area_ha"]')?.value || 0);
+      const landField = form.querySelector('[name="land_area_ha"]');
+      const land = Number(landField?.value || 0);
       const startYear = Number(form.querySelector('[name="start_year_of_activities"]')?.value || 0);
+      const biocharYear = Number(form.querySelector('[name="biochar_start_year"]')?.value || 0);
       if (!isEmailValid(email)) { event.preventDefault(); alert('Please provide a valid email.'); return; }
-      if (!(land > 0 && land <= 1000000)) { event.preventDefault(); alert('Land area must be > 0 and <= 1,000,000.'); return; }
+      if (landField && landField.required && !(land > 0 && land <= 1000000)) { event.preventDefault(); alert('Land area must be > 0 and <= 1,000,000.'); return; }
       if (startYear && (startYear < 2020 || startYear > getCurrentYear() + 10)) { event.preventDefault(); alert('Start year is out of range.'); return; }
+      if (biocharYear && (biocharYear < 2020 || biocharYear > getCurrentYear() + 10)) { event.preventDefault(); alert('Biochar start year is out of range.'); return; }
       if (!validateFiles(form)) { event.preventDefault(); return; }
       const { payload, gaps } = collectPayload(form);
       const p = form.querySelector('[name="payload_json"]');
@@ -844,6 +878,8 @@ const bindSubmissions = () => {
 
 initCountrySelects();
 attachOtherToggle();
+attachPathwayLogic(document.querySelector('#snapshot-form'));
+attachPathwayLogic(document.querySelector('#full-review-form'));
 initFormWizard(document.querySelector('#snapshot-form'), 3);
 initFormWizard(document.querySelector('#full-review-form'), 5);
 attachFullReviewLogic();
