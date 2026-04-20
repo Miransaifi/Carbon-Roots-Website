@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The data sources, conservatism rules, risk framework, and scope boundaries behind every CarbonRoots pre-feasibility output." />
+    <title>Methodology | CarbonRoots</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" id="top">
+      <div class="container nav-wrap">
+        <a class="brand" href="/" aria-label="Carbon Roots home">
+          <img src="assets/logo.png" alt="Carbon Roots" class="brand-logo" onerror="this.style.display='none'" />
+        </a>
+        <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav">Menu</button>
+        <nav id="main-nav" class="main-nav" aria-label="Primary">
+          <a href="/#engine">Engine</a>
+          <a href="/#offer">Offer</a>
+          <a href="/#services">Services</a>
+          <a href="/#outputs">Outputs</a>
+          <a href="/#credibility">Credibility</a>
+          <a href="/methodology">Methodology</a>
+          <a href="/#get-started" class="btn btn-sm">Get Started</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="section">
+        <div class="container methodology-page">
+          <p class="eyebrow">METHODOLOGY</p>
+          <h1>How our pre-feasibility engine works</h1>
+          <p class="lead methodology-lead">The data sources, conservatism rules, risk framework, and scope boundaries behind every CarbonRoots output.</p>
+
+          <p>CarbonRoots is a pre-feasibility engine for afforestation, reforestation, and revegetation (ARR) carbon projects. It gives developers and investors a disciplined, sourced, early-stage view of carbon yield, commercial viability, methodology fit, and risk — the stage before a project commits capital to a full Project Design Document.</p>
+          <p>This page documents exactly where our numbers come from, how we handle uncertainty, and the honest limits of what pre-feasibility can and cannot tell you.</p>
+
+          <section class="method-section">
+            <h2>Data hierarchy</h2>
+            <p>Every parameter the engine uses resolves through a deliberate hierarchy. The tier actually applied for every variable is logged on each run, so any number in your output is reproducible and has a known provenance.</p>
+            <ol>
+              <li><strong>User-provided input</strong> — your data takes precedence wherever available.</li>
+              <li><strong>Regional benchmark preset</strong> — country × land-type × parameter, calibrated against regional literature and versioned with a review owner and last-reviewed date.</li>
+              <li><strong>IPCC 2006 AFOLU default or FAO regional synthesis</strong> — applied when site-specific data is absent.</li>
+              <li><strong>Conservative proxy</strong> — a cautious fallback, flagged as low confidence in your output so you know it's a proxy rather than site-specific science.</li>
+            </ol>
+          </section>
+
+          <section class="method-section">
+            <h2>Primary sources</h2>
+            <p>CarbonRoots draws from the following authoritative sources. Each parameter in the engine is tagged with a source ID, year, and reference link.</p>
+            <table class="method-table">
+              <thead><tr><th>Source</th><th>Used for</th></tr></thead>
+              <tbody>
+                <tr><td><strong>IPCC 2006 Guidelines for National GHG Inventories, Volume 4 (AFOLU)</strong></td><td>Carbon fraction (0.47), CO₂ conversion (44/12), root-to-shoot ratios, default biomass factors by climate and forest type</td></tr>
+                <tr><td><strong>FAO Forestry + FAO Forest Resources Assessment</strong></td><td>Regional plantation biomass, native-mix restoration benchmarks, productivity by species and stand age</td></tr>
+                <tr><td><strong>World Agroforestry (ICRAF)</strong></td><td>Agroforestry species growth curves, particularly Grevillea robusta age-yield data</td></tr>
+                <tr><td><strong>CIFOR (Center for International Forestry Research)</strong></td><td>Dryland restoration biomass studies — Acacia spp. and related dryland species by age class</td></tr>
+                <tr><td><strong>World Bank Climate Knowledge Portal + Carbon Pricing Dashboard</strong></td><td>Rainfall benchmarks, climate zones, regional productivity modifiers, carbon price ranges</td></tr>
+                <tr><td><strong>Verra VCS methodology framework</strong></td><td>Accounting structure — baseline, leakage, buffer, non-permanence conventions aligned with VM0047 and predecessors</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section class="method-section">
+            <h2>Conservatism</h2>
+            <p>When published literature gives a range, we use the midpoint or the lower third — never the upper bound. IPCC defaults serve as a floor rather than a ceiling. Early-stage projects carry more unknowns than mature ones, and optimism at pre-feasibility costs developers capital and credibility downstream. A conservative number that survives due diligence is worth more than an optimistic number that doesn't.</p>
+          </section>
+
+          <section class="method-section">
+            <h2>Risk framework</h2>
+            <p>The engine applies a five-vector risk adjustment. Each vector is rated Low, Medium, or High, and mapped to explicit numerical adjustments — not a single blended buffer number.</p>
+            <table class="method-table">
+              <thead><tr><th>Risk vector</th><th>What it adjusts</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Biological</strong></td><td>Yield multiplier and survival</td></tr>
+                <tr><td><strong>Disturbance</strong></td><td>Credit retention, issuance delay, volatility</td></tr>
+                <tr><td><strong>Baseline</strong></td><td>Credit discount</td></tr>
+                <tr><td><strong>Implementation</strong></td><td>Establishment factor and leakage</td></tr>
+                <tr><td><strong>MRV / data</strong></td><td>Confidence reporting only — never numeric outputs</td></tr>
+              </tbody>
+            </table>
+            <p>Separating these vectors matters because the interventions that address them are different. A biological risk is closed by better species selection; an implementation risk is closed by a stronger on-the-ground partner. Lumping them into a single buffer number hides the actual levers a project has.</p>
+            <p>P50 and P90 risk-adjusted scenarios are produced alongside the base case, in line with investor due-diligence convention.</p>
+          </section>
+
+          <section class="method-section">
+            <h2>Uncertainty</h2>
+            <p>A 10% uncertainty haircut is applied to deterministic credits on top of the risk framework, to reflect data gaps, growth-model simplification, and implementation variability.</p>
+            <p>Every parameter on every run is tagged with a confidence score — High, Medium, or Low. Every data gap is surfaced as a flag in your output. If a number is a conservative proxy rather than site-specific data, the output tells you so in the same place the number appears.</p>
+          </section>
+
+          <section class="method-section">
+            <h2>Transparency</h2>
+            <p>Four features make every output auditable:</p>
+            <ul class="bullets">
+              <li><strong>Source IDs</strong> on every biomass and regional parameter, traceable to the originating reference</li>
+              <li><strong>Evidence versioning</strong> — country parameter sets carry a version tag, review owner, and last-reviewed date</li>
+              <li><strong>QA gates</strong> on every run covering formula errors, IRR consistency, and issuance-basis reconciliation, producing a PASS / REVIEW / FAIL status</li>
+              <li><strong>Visible low-confidence flags</strong> — proxy values and data gaps are surfaced in the output itself, not buried in footnotes</li>
+            </ul>
+          </section>
+
+          <section class="method-section">
+            <h2>What CarbonRoots is not</h2>
+            <p>CarbonRoots is a screening-level decision-support tool. It is explicitly not:</p>
+            <ul>
+              <li>A substitute for formal validation or verification under any carbon standard</li>
+              <li>A registry submission, approval, or listing</li>
+              <li>Investment advice, a security, or a financial recommendation</li>
+              <li>A guarantee of credit issuance, carbon price, or project returns</li>
+            </ul>
+            <p>The accounting scaffolding — baseline deduction, leakage, buffer, risk-adjusted issuance — mirrors how registries treat credits, so numbers translate cleanly when you move to a full Project Design Document. But a pre-feasibility screen is designed to tell you whether to take a project to validation, not to replace validation itself.</p>
+          </section>
+
+          <section class="snapshot-cta method-cta">
+            <h3>Ready to run your project through the engine?</h3>
+            <div class="hero-cta">
+              <a href="/#get-started" class="btn">Start Free Snapshot</a>
+              <a href="/#get-started" class="btn btn-ghost">Apply for Full Review</a>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <p>© <span id="year"></span> Carbon Roots. All rights reserved.</p>
+        <a href="/">Back to home</a>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

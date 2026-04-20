@@ -951,3 +951,71 @@ fieldset.checkbox-grid legend { font-weight:600; font-size:0.92rem; }
 }
 
 .inline-check { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.82rem; color:#4f5851; margin-top:0.25rem; }
+
+
+.credibility-sources {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.credibility-sources-caption {
+  margin: 0 0 0.35rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(19, 23, 20, 0.6);
+}
+
+.credibility-sources-list {
+  margin: 0;
+  color: #2c352f;
+}
+
+.credibility-method-link {
+  margin: 0.9rem 0 0;
+  text-align: center;
+}
+
+.methodology-page {
+  max-width: 920px;
+}
+
+.methodology-lead {
+  color: #556159;
+  max-width: 65ch;
+}
+
+.methodology-page p,
+.methodology-page li {
+  max-width: 65ch;
+}
+
+.method-section {
+  margin-top: 2.1rem;
+}
+
+.method-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.7rem;
+}
+
+.method-table th,
+.method-table td {
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+  padding: 0.68rem 0.6rem;
+}
+
+.method-table th {
+  font-weight: 700;
+}
+
+.method-table td:first-child {
+  width: 38%;
+}
+
+.method-cta {
+  margin-top: 2.2rem;
+}
