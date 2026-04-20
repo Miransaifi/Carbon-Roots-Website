@@ -682,6 +682,30 @@ section[id] {
 .footer-wrap { display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-size: 0.92rem; }
 .site-footer a { color: var(--gold); }
 
+
+.path-cards {
+  margin-top: 1.1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.path-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.path-card ul {
+  margin: 0.8rem 0;
+  padding-left: 1rem;
+}
+
+.path-card .btn {
+  margin-top: 0.45rem;
+}
+
 .intake-helper {
   margin: 1rem 0 0;
   color: #4f5851;
@@ -704,7 +728,8 @@ section[id] {
   box-shadow: var(--shadow);
 }
 
-#intake-form {
+#snapshot-form,
+#full-review-form {
   scroll-margin-top: 210px;
 }
 
@@ -797,6 +822,11 @@ section[id] {
   margin-bottom: 0.45rem;
 }
 
+.intake-form h4 {
+  margin-bottom: 0.45rem;
+  font-size: 1rem;
+}
+
 .intake-form label {
   display: flex;
   flex-direction: column;
@@ -874,7 +904,7 @@ section[id] {
   .main-nav.open { display: flex; }
   .main-nav .btn { width: 100%; }
 
-  .cards-3x, .steps, .boundary-grid, .form-grid { grid-template-columns: 1fr; }
+  .cards-3x, .steps, .boundary-grid, .form-grid, .path-cards { grid-template-columns: 1fr; }
   .kpi-grid, .chart-grid, .insight-columns { grid-template-columns: 1fr; }
   .engine-carousel {
     grid-template-columns: 1fr;

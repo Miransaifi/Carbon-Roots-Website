@@ -31,7 +31,7 @@
           <a href="#services">Services</a>
           <a href="#outputs">Outputs</a>
           <a href="#credibility">Credibility</a>
-          <a href="#intake" class="btn btn-sm">Request a Project Snapshot</a>
+          <a href="#get-started" class="btn btn-sm">Get Started</a>
         </nav>
       </div>
     </header>
@@ -49,7 +49,7 @@
               cost.
             </p>
             <div class="hero-cta">
-              <a href="#intake" class="btn">Request a Project Snapshot</a>
+              <a href="#get-started" class="btn">Get Started</a>
               <a href="#example-output-anchor" class="btn btn-ghost">See example output</a>
             </div>
           </div>
@@ -383,233 +383,269 @@
             </p>
           </div>
           <div class="contact-actions">
-            <a href="#intake" class="btn">Request a Project Snapshot</a>
+            <a href="#get-started" class="btn">Get Started</a>
             <a href="#example-output" class="btn btn-ghost">See example output</a>
             <a href="mailto:miransaifi@carbonroots.earth?subject=Contact%20Carbon%20Roots" class="btn btn-ghost">Contact us</a>
           </div>
         </div>
       </section>
 
-      <section id="intake" class="section">
+      <section id="get-started" class="section section-soft">
         <div class="container">
-          <form name="project-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field" hidden>
-            <input type="hidden" name="form-name" value="project-intake" />
+          <form name="snapshot-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field" hidden>
+            <input type="hidden" name="form-name" value="snapshot-intake" />
             <input type="text" name="bot-field" />
-            <input type="text" name="requested_service" />
-            <input type="text" name="requested_service_select" />
             <input type="text" name="full_name" />
             <input type="email" name="email" />
+            <input type="text" name="role" />
+            <input type="text" name="organization" />
+            <input type="text" name="project_type" />
             <input type="text" name="country_region" />
             <input type="number" name="land_area_ha" />
+            <input type="text" name="project_stage" />
+            <input type="text" name="decision_timeline" />
+            <input type="text" name="land_tenure_status" />
+            <input type="text" name="land_access_confidence" />
+            <textarea name="assumptions"></textarea>
+            <textarea name="unknowns"></textarea>
+            <textarea name="decision_unlock"></textarea>
+          </form>
+
+          <form name="full-review-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field" hidden>
+            <input type="hidden" name="form-name" value="full-review-intake" />
+            <input type="text" name="bot-field" />
+            <input type="text" name="full_name" />
+            <input type="email" name="email" />
+            <input type="text" name="organization" />
             <input type="text" name="project_type" />
-            <input type="text" name="current_land_use" />
-            <input type="text" name="current_land_use_other" />
-            <input type="number" name="implementation_start_year" />
-            <input type="text" name="timeline" />
-            <input type="text" name="crediting_period" />
-            <input type="text" name="implementation_approach" />
+            <input type="text" name="country_region" />
+            <input type="number" name="land_area_ha" />
+            <input type="text" name="project_stage" />
+            <input type="text" name="decision_timeline" />
+            <input type="text" name="land_tenure_status" />
+            <textarea name="land_rights_evidence"></textarea>
+            <textarea name="baseline_land_use"></textarea>
+            <input type="text" name="funding_model" />
+            <input type="text" name="budget_band" />
             <input type="text" name="species_intentions" />
             <input type="text" name="expected_survival_rate" />
             <input type="text" name="establishment_cost_range" />
             <input type="text" name="maintenance_cost_range" />
-            <input type="text" name="carbon_price_range" />
-            <input type="text" name="land_tenure_status" />
+            <textarea name="decision_unlock"></textarea>
             <textarea name="notes"></textarea>
           </form>
 
-          <p class="eyebrow">Project intake</p>
-          <h2>Request a Project Snapshot</h2>
-          <p class="intake-helper">
-            Provide a few key details about your project. You do not need exact inputs — missing values will be estimated using regional and project-specific benchmark assumptions.
-          </p>
-          <p class="intake-offer-note" id="intake-offer-note" hidden></p>
-          <form id="intake-form" class="intake-form" name="project-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field">
-            <input type="hidden" name="form-name" value="project-intake" />
+          <p class="eyebrow">Get started</p>
+          <h2>Choose the right intake path for your project.</h2>
+          <p class="intake-helper">Use the free snapshot for fast triage, or apply for a full pre-feasibility review when you need deeper decision support.</p>
+
+          <div class="path-cards">
+            <article class="path-card">
+              <h3>Free Project Snapshot</h3>
+              <p>5-8 minute form for early-stage screening. Typical turnaround: 3-7 days.</p>
+              <ul>
+                <li>Fit signal: viable, conditional, or not ready</li>
+                <li>Top risk flags and missing critical data</li>
+                <li>Upgrade recommendation for full review</li>
+              </ul>
+              <a class="btn btn-ghost" href="#snapshot-form">Start Free Snapshot</a>
+            </article>
+            <article class="path-card">
+              <h3>Full Pre-Feasibility Review</h3>
+              <p>Structured application for investor-grade screening and risk-adjusted outputs.</p>
+              <ul>
+                <li>Carbon and financial scenario screening</li>
+                <li>Risk and data-gap assessment</li>
+                <li>Scoping call after application review</li>
+              </ul>
+              <a class="btn" href="#full-review-form">Apply for Full Review</a>
+            </article>
+          </div>
+
+          <form id="snapshot-form" class="intake-form" name="snapshot-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="snapshot-intake" />
             <p hidden>
-              <label>
-                Don’t fill this out if you're human: <input name="bot-field" />
-              </label>
+              <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
             </p>
-            <input type="hidden" name="requested_service" id="requested-service" value="Full pre-feasibility review" />
+            <h3>Free Project Snapshot</h3>
 
             <div class="form-section form-section-compact">
-              <h3>Contact Information</h3>
+              <h4>Contact and context</h4>
               <div class="form-grid">
-                <label>
-                  Full Name *
-                  <input type="text" name="full_name" placeholder="Your name" required />
-                </label>
-                <label>
-                  Email *
-                  <input type="email" name="email" placeholder="you@example.com" required />
-                </label>
+                <label>Full Name *<input type="text" name="full_name" required /></label>
+                <label>Email *<input type="email" name="email" required /></label>
+                <label>Role *<input type="text" name="role" required /></label>
+                <label>Organization<input type="text" name="organization" /></label>
               </div>
             </div>
 
             <div class="form-section">
-              <h3>Required Inputs</h3>
-              <p class="form-section-note">These are the minimum inputs needed to run the model.</p>
-              <p class="required-progress" id="required-progress">Step 1 of 8</p>
-              <div class="required-sequence">
-                <div class="required-step is-active" data-required-step="1">
-                  <label>
-                    Project Type *
-                    <select name="project_type" required>
-                      <option value="" selected disabled>Select one</option>
-                      <option>Afforestation / Reforestation (ARR)</option>
-                      <option>Agroforestry</option>
-                      <option>Assisted Natural Regeneration (ANR)</option>
-                      <option>Mixed / Unsure</option>
-                    </select>
-                  </label>
-                </div>
-                <div class="required-step" data-required-step="2" hidden>
-                  <label>
-                    Country / Region *
-                    <input type="text" name="country_region" placeholder="e.g. Kenya, Rift Valley" required />
-                  </label>
-                </div>
-                <div class="required-step" data-required-step="3" hidden>
-                  <label>
-                    Land Area (ha) *
-                    <input type="number" name="land_area_ha" placeholder="e.g. 1250" min="0" step="0.1" required />
-                  </label>
-                </div>
-                <div class="required-step" data-required-step="4" hidden>
-                  <label>
-                    Current Land Use *
-                    <select name="current_land_use" id="current-land-use" required>
-                      <option value="" selected disabled>Select one</option>
-                      <option>Degraded / bare land</option>
-                      <option>Grazing land</option>
-                      <option>Cropland</option>
-                      <option>Mixed</option>
-                      <option>Other</option>
-                    </select>
-                  </label>
-                  <label id="current-land-use-other-wrap" hidden>
-                    Please specify current land use
-                    <input type="text" name="current_land_use_other" id="current-land-use-other" placeholder="Approximate description is fine" />
-                  </label>
-                </div>
-                <div class="required-step" data-required-step="5" hidden>
-                  <label>
-                    Planting / Implementation Start Year *
-                    <input type="number" name="implementation_start_year" placeholder="e.g. 2026" min="2025" step="1" required />
-                  </label>
-                </div>
-                <div class="required-step" data-required-step="6" hidden>
-                  <label>
-                    Crediting Period *
-                    <select name="crediting_period" required>
-                      <option value="" selected disabled>Select one</option>
-                      <option>20 years</option>
-                      <option>30 years</option>
-                      <option>40 years</option>
-                      <option>Unsure</option>
-                    </select>
-                  </label>
-                </div>
-                <div class="required-step" data-required-step="7" hidden>
-                  <label>
-                    Expected Carbon Price *
-                    <select name="carbon_price_range" required>
-                      <option value="" selected disabled>Select one</option>
-                      <option>&lt;$10/tCO2e</option>
-                      <option>$10–$20/tCO2e</option>
-                      <option>$20–$40/tCO2e</option>
-                      <option>$40+/tCO2e</option>
-                      <option>Unsure (conservative default applied)</option>
-                    </select>
-                  </label>
-                </div>
-                <div class="required-step" data-required-step="8" hidden>
-                  <label>
-                    Land Tenure Status *
-                    <select name="land_tenure_status" required>
-                      <option value="" selected disabled>Select one</option>
-                      <option>Secure ownership</option>
-                      <option>Lease agreement</option>
-                      <option>Community / shared land</option>
-                      <option>Unclear</option>
-                    </select>
-                  </label>
-                </div>
-              </div>
-              <div class="required-actions">
-                <button type="button" class="btn btn-ghost" id="required-back" hidden>Back</button>
-                <button type="button" class="btn" id="required-next">Next</button>
+              <h4>Mandatory screening inputs</h4>
+              <div class="form-grid">
+                <label>Project Type *
+                  <select name="project_type" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Afforestation / Reforestation (ARR)</option>
+                    <option>Agroforestry</option>
+                    <option>Assisted Natural Regeneration (ANR)</option>
+                    <option>Restoration (mixed)</option>
+                  </select>
+                </label>
+                <label>Country / Region *<input type="text" name="country_region" required /></label>
+                <label>Land Area (ha) *<input type="number" name="land_area_ha" min="1" step="0.1" required /></label>
+                <label>Project Stage *
+                  <select name="project_stage" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Concept</option>
+                    <option>Pre-development</option>
+                    <option>Investor outreach</option>
+                  </select>
+                </label>
+                <label>Decision Timeline *<input type="text" name="decision_timeline" placeholder="e.g. Q3 2026" required /></label>
+                <label>Land Tenure Status *
+                  <select name="land_tenure_status" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Secure ownership</option>
+                    <option>Lease agreement</option>
+                    <option>Community / shared land</option>
+                    <option>Unclear</option>
+                  </select>
+                </label>
+                <label>Land Access Confidence *
+                  <select name="land_access_confidence" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>High</option>
+                    <option>Medium</option>
+                    <option>Low</option>
+                  </select>
+                </label>
+                <label>Decision this should unlock *<input type="text" name="decision_unlock" required /></label>
               </div>
             </div>
 
             <div class="form-section">
-              <h3>Optional Inputs</h3>
-              <p class="form-section-note">These improve accuracy. If not provided, Carbon Roots will apply regional and project-specific benchmark assumptions.</p>
+              <h4>Assumptions and unknowns</h4>
               <div class="form-grid">
-                <label>
-                  Implementation Approach
-                  <select name="implementation_approach">
-                    <option value="" selected disabled>Select one</option>
-                    <option>All at once</option>
-                    <option>Phased over time</option>
-                    <option>Unsure</option>
-                  </select>
-                </label>
-                <label>
-                  Expected Survival Rate
-                  <select name="expected_survival_rate">
-                    <option value="" selected disabled>Select one</option>
-                    <option>&lt;60%</option>
-                    <option>60–80%</option>
-                    <option>80–95%</option>
-                    <option>Unsure</option>
-                  </select>
-                </label>
-                <label>
-                  Estimated Establishment Cost per Hectare
-                  <select name="establishment_cost_range">
-                    <option value="" selected disabled>Select one</option>
-                    <option>&lt;$500</option>
-                    <option>$500–$1,500</option>
-                    <option>$1,500–$3,000</option>
-                    <option>&gt;$3,000</option>
-                    <option>Unsure</option>
-                  </select>
-                </label>
-                <label>
-                  Estimated Annual Maintenance Cost per Hectare
-                  <select name="maintenance_cost_range">
-                    <option value="" selected disabled>Select one</option>
-                    <option>&lt;$50</option>
-                    <option>$50–$150</option>
-                    <option>$150–$300</option>
-                    <option>&gt;$300</option>
-                    <option>Unsure</option>
-                  </select>
-                </label>
-                <label>
-                  Species / System in Mind
-                  <input type="text" name="species_intentions" placeholder="Optional" />
-                </label>
-                <label class="form-span-2">
-                  Notes / Additional Context
-                  <textarea name="notes" rows="5" placeholder="Optional"></textarea>
-                </label>
+                <label>Top 3 assumptions *<textarea name="assumptions" rows="4" required></textarea></label>
+                <label>Key unknowns *<textarea name="unknowns" rows="4" required></textarea></label>
               </div>
-              <p class="form-assumption-note">
-                Where optional inputs are not provided, Carbon Roots uses benchmark assumptions based on project type, geography, and land context.
-              </p>
             </div>
 
             <div class="submit-block">
-              <p class="submit-note">Most carbon projects fail because feasibility is not tested under real pricing and delivery conditions.</p>
-              <button type="submit" class="btn">Get Project Snapshot</button>
+              <button type="submit" class="btn">Submit Free Snapshot</button>
+            </div>
+          </form>
+
+          <form id="full-review-form" class="intake-form" name="full-review-intake" method="POST" action="/thank-you/" data-netlify="true" netlify netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="full-review-intake" />
+            <p hidden><label>Don’t fill this out if you're human: <input name="bot-field" /></label></p>
+            <h3>Full Pre-Feasibility Review Application</h3>
+
+            <div class="form-section form-section-compact">
+              <h4>Applicant</h4>
+              <div class="form-grid">
+                <label>Full Name *<input type="text" name="full_name" required /></label>
+                <label>Email *<input type="email" name="email" required /></label>
+                <label>Organization *<input type="text" name="organization" required /></label>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h4>Project fundamentals</h4>
+              <div class="form-grid">
+                <label>Project Type *
+                  <select name="project_type" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Afforestation / Reforestation (ARR)</option>
+                    <option>Agroforestry</option>
+                    <option>Assisted Natural Regeneration (ANR)</option>
+                    <option>Restoration (mixed)</option>
+                  </select>
+                </label>
+                <label>Country / Region *<input type="text" name="country_region" required /></label>
+                <label>Land Area (ha) *<input type="number" name="land_area_ha" min="1" step="0.1" required /></label>
+                <label>Project Stage *
+                  <select name="project_stage" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Concept</option>
+                    <option>Pre-development</option>
+                    <option>Investor outreach</option>
+                  </select>
+                </label>
+                <label>Decision Timeline *<input type="text" name="decision_timeline" required /></label>
+                <label>Land Tenure Status *
+                  <select name="land_tenure_status" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Secure ownership</option>
+                    <option>Lease agreement</option>
+                    <option>Community / shared land</option>
+                    <option>Unclear</option>
+                  </select>
+                </label>
+                <label class="form-span-2">Baseline land use *<textarea name="baseline_land_use" rows="3" required></textarea></label>
+                <label class="form-span-2">Land rights evidence *<textarea name="land_rights_evidence" rows="3" required></textarea></label>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h4>Commercial and technical assumptions</h4>
+              <div class="form-grid">
+                <label>Funding model *
+                  <select name="funding_model" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>Self-funded</option>
+                    <option>Investor-funded</option>
+                    <option>Blended finance</option>
+                    <option>Undecided</option>
+                  </select>
+                </label>
+                <label>Budget band *
+                  <select name="budget_band" required>
+                    <option value="" selected disabled>Select one</option>
+                    <option>&lt;$250k</option>
+                    <option>$250k-$1m</option>
+                    <option>$1m-$5m</option>
+                    <option>$5m+</option>
+                  </select>
+                </label>
+                <label>Species / system (optional)<input type="text" name="species_intentions" /></label>
+                <label>Expected survival rate (optional)
+                  <select name="expected_survival_rate">
+                    <option value="" selected>Select one</option>
+                    <option>&lt;60%</option>
+                    <option>60-80%</option>
+                    <option>80-95%</option>
+                  </select>
+                </label>
+                <label>Establishment cost / ha (optional)
+                  <select name="establishment_cost_range">
+                    <option value="" selected>Select one</option>
+                    <option>&lt;$500</option>
+                    <option>$500-$1,500</option>
+                    <option>$1,500-$3,000</option>
+                    <option>$3,000+</option>
+                  </select>
+                </label>
+                <label>Annual maintenance / ha (optional)
+                  <select name="maintenance_cost_range">
+                    <option value="" selected>Select one</option>
+                    <option>&lt;$50</option>
+                    <option>$50-$150</option>
+                    <option>$150-$300</option>
+                    <option>$300+</option>
+                  </select>
+                </label>
+                <label class="form-span-2">Decision this review should unlock *<textarea name="decision_unlock" rows="3" required></textarea></label>
+                <label class="form-span-2">Notes / additional context<textarea name="notes" rows="4"></textarea></label>
+              </div>
             </div>
 
             <div class="intake-actions">
-              <p>
-                We work with incomplete data. Part of this process is identifying what is missing.
-              </p>
+              <p>After submission, we review the application and invite you to a scoping call if fit is confirmed.</p>
+              <a href="mailto:miransaifi@carbonroots.earth?subject=Full%20Pre-Feasibility%20Review%20Enquiry" class="btn btn-ghost">Discuss via Email</a>
+            </div>
+            <div class="submit-block">
+              <button type="submit" class="btn">Apply for Full Review</button>
             </div>
           </form>
         </div>
