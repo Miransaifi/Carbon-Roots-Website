@@ -718,7 +718,7 @@ const attachPathwayLogic = (form) => {
     const selected = pathwaySelect.value;
     conditioned.forEach((el) => {
       const mode = el.getAttribute('data-pathway');
-      const show = !selected || selected === 'Unsure' ? true : mode === selected.toLowerCase();
+      const show = selected === 'Unsure' ? true : selected ? mode === selected.toLowerCase() : false;
       el.hidden = !show;
 
       el.querySelectorAll('[data-required]').forEach((field) => {
